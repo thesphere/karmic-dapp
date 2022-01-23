@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Header from '../components/Header'
 import { useEffect, useContext } from 'react'
 import { ellipseAddress, getChainData } from '../lib/utilities.js'
+import TokenBalances from '../components/TokenBalances'
 
 export const Home = () => {
   const { state, dispatch, connect, disconnect } = useContext(Web3Context)
@@ -80,7 +81,9 @@ export const Home = () => {
         )}
       </header>
 
-      <main>Main</main>
+      <main>
+        <TokenBalances />
+      </main>
     </div>
   )
 }
