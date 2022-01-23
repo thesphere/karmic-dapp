@@ -1,0 +1,88 @@
+{
+  "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "tokens",
+          "type": "address[]"
+        }
+      ],
+      "name": "addBoxTokens",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getBoxTokens",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "boxTokens",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x3ba4530da0c78fcb72c211028511859003a3c725e375454f30420668df83ef61",
+  "receipt": {
+    "to": null,
+    "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "contractAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    "transactionIndex": 0,
+    "gasUsed": "393947",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x0ffc233d34371a345808872df76765fa2253944b234b4ddff14ab79a9a8a69a4",
+    "transactionHash": "0x3ba4530da0c78fcb72c211028511859003a3c725e375454f30420668df83ef61",
+    "logs": [],
+    "blockNumber": 1,
+    "cumulativeGasUsed": "393947",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "b01c45356c6fa8dbd220dd04f0a5ce14",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.4+commit.c7e474f2\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"tokens\",\"type\":\"address[]\"}],\"name\":\"addBoxTokens\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getBoxTokens\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"boxTokens\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Karmic.sol\":\"Karmic\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (token/ERC20/IERC20.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Interface of the ERC20 standard as defined in the EIP.\\n */\\ninterface IERC20 {\\n    /**\\n     * @dev Returns the amount of tokens in existence.\\n     */\\n    function totalSupply() external view returns (uint256);\\n\\n    /**\\n     * @dev Returns the amount of tokens owned by `account`.\\n     */\\n    function balanceOf(address account) external view returns (uint256);\\n\\n    /**\\n     * @dev Moves `amount` tokens from the caller's account to `recipient`.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transfer(address recipient, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Returns the remaining number of tokens that `spender` will be\\n     * allowed to spend on behalf of `owner` through {transferFrom}. This is\\n     * zero by default.\\n     *\\n     * This value changes when {approve} or {transferFrom} are called.\\n     */\\n    function allowance(address owner, address spender) external view returns (uint256);\\n\\n    /**\\n     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * IMPORTANT: Beware that changing an allowance with this method brings the risk\\n     * that someone may use both the old and the new allowance by unfortunate\\n     * transaction ordering. One possible solution to mitigate this race\\n     * condition is to first reduce the spender's allowance to 0 and set the\\n     * desired value afterwards:\\n     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729\\n     *\\n     * Emits an {Approval} event.\\n     */\\n    function approve(address spender, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Moves `amount` tokens from `sender` to `recipient` using the\\n     * allowance mechanism. `amount` is then deducted from the caller's\\n     * allowance.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transferFrom(\\n        address sender,\\n        address recipient,\\n        uint256 amount\\n    ) external returns (bool);\\n\\n    /**\\n     * @dev Emitted when `value` tokens are moved from one account (`from`) to\\n     * another (`to`).\\n     *\\n     * Note that `value` may be zero.\\n     */\\n    event Transfer(address indexed from, address indexed to, uint256 value);\\n\\n    /**\\n     * @dev Emitted when the allowance of a `spender` for an `owner` is set by\\n     * a call to {approve}. `value` is the new allowance.\\n     */\\n    event Approval(address indexed owner, address indexed spender, uint256 value);\\n}\\n\",\"keccak256\":\"0x61437cb513a887a1bbad006e7b1c8b414478427d33de47c5600af3c748f108da\",\"license\":\"MIT\"},\"contracts/Karmic.sol\":{\"content\":\"//SPDX-License-Identifier: Unlicense\\npragma solidity ^0.8.0;\\n\\nimport \\\"@openzeppelin/contracts/token/ERC20/IERC20.sol\\\";\\n\\ncontract Karmic {\\n    address[] private _boxTokens;\\n\\n    function addBoxTokens(address[] memory tokens) external {\\n        for(uint8 i; i< tokens.length; i++) {\\n            _boxTokens.push(tokens[i]);\\n        }\\n    }\\n\\n    function getBoxTokens() external view returns (address[] memory boxTokens){\\n        boxTokens = new address[](_boxTokens.length);\\n\\n        for(uint8 i; i < _boxTokens.length; i++) {\\n            boxTokens[i] = _boxTokens[i];\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xd169d868241634f50af8d0d7558772ad0a72c1e89fc6b6d0161dd1d137ad697c\",\"license\":\"Unlicense\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610634806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c806365cfacaa1461003b578063732a4d3114610057575b600080fd5b6100556004803603810190610050919061036c565b610075565b005b61005f610141565b60405161006c9190610432565b60405180910390f35b60005b81518160ff16101561013d576000828260ff16815181106100c2577f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b60200260200101519080600181540180825580915050600190039060005260206000200160009091909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555080806101359061054e565b915050610078565b5050565b606060008054905067ffffffffffffffff811115610188577f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b6040519080825280602002602001820160405280156101b65781602001602082028036833780820191505090505b50905060005b6000805490508160ff1610156102bd5760008160ff1681548110610209577f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16828260ff1681518110610270577f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b602002602001019073ffffffffffffffffffffffffffffffffffffffff16908173ffffffffffffffffffffffffffffffffffffffff168152505080806102b59061054e565b9150506101bc565b5090565b60006102d46102cf84610479565b610454565b905080838252602082019050828560208602820111156102f357600080fd5b60005b858110156103235781610309888261032d565b8452602084019350602083019250506001810190506102f6565b5050509392505050565b60008135905061033c816105e7565b92915050565b600082601f83011261035357600080fd5b81356103638482602086016102c1565b91505092915050565b60006020828403121561037e57600080fd5b600082013567ffffffffffffffff81111561039857600080fd5b6103a484828501610342565b91505092915050565b60006103b983836103c5565b60208301905092915050565b6103ce816104de565b82525050565b60006103df826104b5565b6103e981856104cd565b93506103f4836104a5565b8060005b8381101561042557815161040c88826103ad565b9750610417836104c0565b9250506001810190506103f8565b5085935050505092915050565b6000602082019050818103600083015261044c81846103d4565b905092915050565b600061045e61046f565b905061046a828261051d565b919050565b6000604051905090565b600067ffffffffffffffff821115610494576104936105a7565b5b602082029050602081019050919050565b6000819050602082019050919050565b600081519050919050565b6000602082019050919050565b600082825260208201905092915050565b60006104e9826104f0565b9050919050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b600060ff82169050919050565b610526826105d6565b810181811067ffffffffffffffff82111715610545576105446105a7565b5b80604052505050565b600061055982610510565b915060ff82141561056d5761056c610578565b5b600182019050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b6000601f19601f8301169050919050565b6105f0816104de565b81146105fb57600080fd5b5056fea26469706673582212206b2171f89826343f161a08eabb63282f1503c79a7173d7a03ba699dba8a43ce464736f6c63430008040033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c806365cfacaa1461003b578063732a4d3114610057575b600080fd5b6100556004803603810190610050919061036c565b610075565b005b61005f610141565b60405161006c9190610432565b60405180910390f35b60005b81518160ff16101561013d576000828260ff16815181106100c2577f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b60200260200101519080600181540180825580915050600190039060005260206000200160009091909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555080806101359061054e565b915050610078565b5050565b606060008054905067ffffffffffffffff811115610188577f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b6040519080825280602002602001820160405280156101b65781602001602082028036833780820191505090505b50905060005b6000805490508160ff1610156102bd5760008160ff1681548110610209577f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16828260ff1681518110610270577f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b602002602001019073ffffffffffffffffffffffffffffffffffffffff16908173ffffffffffffffffffffffffffffffffffffffff168152505080806102b59061054e565b9150506101bc565b5090565b60006102d46102cf84610479565b610454565b905080838252602082019050828560208602820111156102f357600080fd5b60005b858110156103235781610309888261032d565b8452602084019350602083019250506001810190506102f6565b5050509392505050565b60008135905061033c816105e7565b92915050565b600082601f83011261035357600080fd5b81356103638482602086016102c1565b91505092915050565b60006020828403121561037e57600080fd5b600082013567ffffffffffffffff81111561039857600080fd5b6103a484828501610342565b91505092915050565b60006103b983836103c5565b60208301905092915050565b6103ce816104de565b82525050565b60006103df826104b5565b6103e981856104cd565b93506103f4836104a5565b8060005b8381101561042557815161040c88826103ad565b9750610417836104c0565b9250506001810190506103f8565b5085935050505092915050565b6000602082019050818103600083015261044c81846103d4565b905092915050565b600061045e61046f565b905061046a828261051d565b919050565b6000604051905090565b600067ffffffffffffffff821115610494576104936105a7565b5b602082029050602081019050919050565b6000819050602082019050919050565b600081519050919050565b6000602082019050919050565b600082825260208201905092915050565b60006104e9826104f0565b9050919050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b600060ff82169050919050565b610526826105d6565b810181811067ffffffffffffffff82111715610545576105446105a7565b5b80604052505050565b600061055982610510565b915060ff82141561056d5761056c610578565b5b600182019050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b6000601f19601f8301169050919050565b6105f0816104de565b81146105fb57600080fd5b5056fea26469706673582212206b2171f89826343f161a08eabb63282f1503c79a7173d7a03ba699dba8a43ce464736f6c63430008040033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 83,
+        "contract": "contracts/Karmic.sol:Karmic",
+        "label": "_boxTokens",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_array(t_address)dyn_storage"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_array(t_address)dyn_storage": {
+        "base": "t_address",
+        "encoding": "dynamic_array",
+        "label": "address[]",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}
