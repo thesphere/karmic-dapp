@@ -7,7 +7,7 @@ import erc20 from '../contracts/ERC20.json'
 const TokenBalances = () => {
   const [fetchingTokens, setFetchingTokens] = useState(true)
   // [address, balance, approvedSum, pendingApproval]
-  const [tokenBalances, setTokenBalances] = useState([])
+  const [tokens, setTokens] = useState([])
   const { state } = useContext(Web3Context)
   const { web3Provider, address } = state
 
@@ -20,10 +20,11 @@ const TokenBalances = () => {
 
     const fetchTokenBalances = async () => {
       const tokens = await karmicInstance.getBoxTokens()
+
       const balances = await Promise.all(
-        tokens.map(async (tokenAddress) => {
+        tokens.map(async (token) => {
           const tokenInstance = new ethers.Contract(
-            tokenAddress,
+            token,
             erc20.abi,
             web3Provider
           )
@@ -35,15 +36,16 @@ const TokenBalances = () => {
 
           const pendingApproval = false
 
-          return [
-            tokenAddress,
-            ethers.utils.formatEther(balance),
-            ethers.utils.formatEther(isKarmicApproved),
+          return {
+            token,
+            balance: ethers.utils.formatEther(balance),
+            approved: ethers.utils.formatEther(isKarmicApproved),
             pendingApproval,
-          ]
+          }
         })
       )
-      setTokenBalances(balances)
+
+      setTokens(balances)
       setFetchingTokens(false)
     }
 
@@ -52,29 +54,37 @@ const TokenBalances = () => {
     }
   }, [web3Provider, address])
 
-  const handleApprove = async (tokenBalance) => {
-    let [tokenAddress, balance] = tokenBalance
+  const handleApprove = async (token) => {
+    let tokenCopy = { ...token }
     const signer = await web3Provider.getSigner(address)
-    const tokenInstance = new ethers.Contract(tokenAddress, erc20.abi, signer)
-    const idx = tokenBalances.findIndex((arr) => arr[0] === tokenAddress)
-
+    const tokenInstance = new ethers.Contract(token.token, erc20.abi, signer)
+    // console.log(await tokenInstance.balanceOf(address))
+    const idx = tokens.findIndex((tokenObj) => tokenObj.token === token.token)
+    console.log(idx)
     const tx = await tokenInstance.approve(
       karmicContract.address,
-      ethers.utils.parseEther(balance)
+      ethers.utils.parseEther(token.balance)
     )
 
-    tokenBalance[3] = true
-    let tokensCopy = [...tokenBalances]
-    tokensCopy[idx] = tokenBalance
-    setTokenBalances(tokensCopy)
+    console.log(tx)
+    console.log
+    console.log(idx)
+
+    tokenCopy.pendingApproval = true
+    let tokensCopy = [...tokens]
+    tokensCopy[idx] = tokenCopy
+    console.log('heya')
+    setTokens(tokensCopy)
 
     tx.wait()
       .then(() => {
-        tokenBalance[2] = balance
-        tokenBalance[3] = false
-        tokensCopy = [...tokenBalances]
-        tokensCopy[idx] = tokenBalance
-        setTokenBalances(tokensCopy)
+        console.log('bu')
+        tokenCopy.approved = tokenCopy.balance
+        tokenCopy.pendingApproval = false
+        tokensCopy = [...tokens]
+        tokensCopy[idx] = tokenCopy
+        console.log(tokensCopy)
+        setTokens(tokensCopy)
       })
       .catch((e) => console.log(e))
   }
@@ -86,12 +96,14 @@ const TokenBalances = () => {
       karmicContract.abi,
       signer
     )
-    const tokenAddresses = tokenBalances
+    const tokenAddresses = tokens
       .filter((token) => token[1] > 0)
       .map((token) => token[0])
 
     const tx = await karmicInstance.claimGovernanceTokens(tokenAddresses)
   }
+
+  console.log(tokens)
 
   return (
     <div>
@@ -100,21 +112,20 @@ const TokenBalances = () => {
         <div>fetching tokens..</div>
       ) : (
         <div>
-          {tokenBalances.map((tokenBalance) => {
-            const [address, balance, approvedSum, pendingApproval] =
-              tokenBalance
+          {tokens.map((tokenBalance) => {
+            const { token, balance, approved, pendingApproval } = tokenBalance
             return (
               balance > 0 && (
                 <>
-                  <div key={address}>
-                    <span>{address}</span>: <span>{balance}</span>{' '}
+                  <div key={token}>
+                    <span>{token}</span>: <span>{balance}</span>{' '}
                     <button
                       onClick={() => handleApprove(tokenBalance)}
-                      disabled={approvedSum >= balance || pendingApproval}
+                      disabled={approved >= balance || pendingApproval}
                     >
                       {pendingApproval
                         ? 'pendingApproval'
-                        : approvedSum >= balance
+                        : approved >= balance
                         ? 'Approved'
                         : 'Approve'}
                     </button>
