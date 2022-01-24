@@ -6,6 +6,7 @@ import erc20 from '../contracts/ERC20.json'
 
 const TokenBalances = () => {
   const [fetchingTokens, setFetchingTokens] = useState(true)
+  // [address, balance, approvedSum, pendingApproval]
   const [tokenBalances, setTokenBalances] = useState([])
   const { state } = useContext(Web3Context)
   const { web3Provider, address } = state
@@ -32,13 +33,13 @@ const TokenBalances = () => {
             karmicContract.address
           )
 
-          const pending = false
+          const pendingApproval = false
 
           return [
             tokenAddress,
             ethers.utils.formatEther(balance),
             ethers.utils.formatEther(isKarmicApproved),
-            pending,
+            pendingApproval,
           ]
         })
       )
@@ -78,6 +79,20 @@ const TokenBalances = () => {
       .catch((e) => console.log(e))
   }
 
+  const handleClaim = async () => {
+    const signer = await web3Provider.getSigner(address)
+    const karmicInstance = new ethers.Contract(
+      karmicContract.address,
+      karmicContract.abi,
+      signer
+    )
+    const tokenAddresses = tokenBalances
+      .filter((token) => token[1] > 0)
+      .map((token) => token[0])
+
+    const tx = await karmicInstance.claimGovernanceTokens(tokenAddresses)
+  }
+
   return (
     <div>
       <h1>Token Balances</h1>
@@ -86,25 +101,29 @@ const TokenBalances = () => {
       ) : (
         <div>
           {tokenBalances.map((tokenBalance) => {
-            const [address, balance, approvedSum, pending] = tokenBalance
+            const [address, balance, approvedSum, pendingApproval] =
+              tokenBalance
             return (
               balance > 0 && (
-                <div key={address}>
-                  <span>{address}</span>: <span>{balance}</span>{' '}
-                  <button
-                    onClick={() => handleApprove(tokenBalance)}
-                    disabled={approvedSum >= balance || pending}
-                  >
-                    {pending
-                      ? 'pending'
-                      : approvedSum >= balance
-                      ? 'Approved'
-                      : 'Approve'}
-                  </button>
-                </div>
+                <>
+                  <div key={address}>
+                    <span>{address}</span>: <span>{balance}</span>{' '}
+                    <button
+                      onClick={() => handleApprove(tokenBalance)}
+                      disabled={approvedSum >= balance || pendingApproval}
+                    >
+                      {pendingApproval
+                        ? 'pendingApproval'
+                        : approvedSum >= balance
+                        ? 'Approved'
+                        : 'Approve'}
+                    </button>
+                  </div>
+                </>
               )
             )
           })}
+          <button onClick={() => handleClaim()}>Claim</button>
         </div>
       )}
     </div>
