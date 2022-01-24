@@ -60,30 +60,22 @@ const TokenBalances = () => {
     const tokenInstance = new ethers.Contract(token.token, erc20.abi, signer)
     // console.log(await tokenInstance.balanceOf(address))
     const idx = tokens.findIndex((tokenObj) => tokenObj.token === token.token)
-    console.log(idx)
     const tx = await tokenInstance.approve(
       karmicContract.address,
       ethers.utils.parseEther(token.balance)
     )
 
-    console.log(tx)
-    console.log
-    console.log(idx)
-
     tokenCopy.pendingApproval = true
     let tokensCopy = [...tokens]
     tokensCopy[idx] = tokenCopy
-    console.log('heya')
     setTokens(tokensCopy)
 
     tx.wait()
       .then(() => {
-        console.log('bu')
         tokenCopy.approved = tokenCopy.balance
         tokenCopy.pendingApproval = false
         tokensCopy = [...tokens]
         tokensCopy[idx] = tokenCopy
-        console.log(tokensCopy)
         setTokens(tokensCopy)
       })
       .catch((e) => console.log(e))
@@ -102,8 +94,6 @@ const TokenBalances = () => {
 
     const tx = await karmicInstance.claimGovernanceTokens(tokenAddresses)
   }
-
-  console.log(tokens)
 
   return (
     <div>
