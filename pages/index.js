@@ -11,7 +11,8 @@ export const Home = () => {
 
   // Auto connect to the cached provider
   useEffect(() => {
-    if (web3Modal.cachedProvider) {
+    const { cachedProvider } = web3Modal
+    if (cachedProvider) {
       connect()
     }
   }, [connect])
@@ -54,9 +55,7 @@ export const Home = () => {
         }
       }
     }
-  }, [provider, disconnect])
-
-  const chainData = getChainData(chainId)
+  }, [provider, disconnect, dispatch])
 
   return (
     <div className="container">

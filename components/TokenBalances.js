@@ -5,15 +5,16 @@ import karmicContract from '../contracts/Karmic.json'
 import erc20 from '../contracts/ERC20.json'
 
 const TokenBalances = () => {
-  const [loading, setLoading] = useState(true)
+  const [fetchingTokens, setFetchingTokens] = useState(true)
   const [tokenBalances, setTokenBalances] = useState([])
   const { state } = useContext(Web3Context)
+  const { web3Provider, address } = state
 
   useEffect(() => {
     const karmicInstance = new ethers.Contract(
       karmicContract.address,
       karmicContract.abi,
-      state.web3Provider
+      web3Provider
     )
 
     const fetchTokenBalances = async () => {
@@ -23,33 +24,87 @@ const TokenBalances = () => {
           const tokenInstance = new ethers.Contract(
             tokenAddress,
             erc20.abi,
-            state.web3Provider
+            web3Provider
           )
           const balance = await tokenInstance.balanceOf(state.address)
-          return [tokenAddress, ethers.utils.formatEther(balance)]
+          const isKarmicApproved = await tokenInstance.allowance(
+            address,
+            karmicContract.address
+          )
+
+          const pending = false
+
+          return [
+            tokenAddress,
+            ethers.utils.formatEther(balance),
+            ethers.utils.formatEther(isKarmicApproved),
+            pending,
+          ]
         })
       )
       setTokenBalances(balances)
-      setLoading(false)
+      setFetchingTokens(false)
     }
 
-    if (state.web3Provider) {
+    if (web3Provider) {
       fetchTokenBalances()
     }
-  }, [state.web3Provider, state.address])
+  }, [web3Provider, address])
+
+  const handleApprove = async (tokenBalance) => {
+    let [tokenAddress, balance] = tokenBalance
+    const signer = await web3Provider.getSigner(address)
+    const tokenInstance = new ethers.Contract(tokenAddress, erc20.abi, signer)
+    const idx = tokenBalances.findIndex((arr) => arr[0] === tokenAddress)
+
+    const tx = await tokenInstance.approve(
+      karmicContract.address,
+      ethers.utils.parseEther(balance)
+    )
+
+    tokenBalance[3] = true
+    let tokensCopy = [...tokenBalances]
+    tokensCopy[idx] = tokenBalance
+    setTokenBalances(tokensCopy)
+
+    tx.wait()
+      .then(() => {
+        tokenBalance[2] = balance
+        tokenBalance[3] = false
+        tokensCopy = [...tokenBalances]
+        tokensCopy[idx] = tokenBalance
+        setTokenBalances(tokensCopy)
+      })
+      .catch((e) => console.log(e))
+  }
 
   return (
     <div>
       <h1>Token Balances</h1>
-      {loading ? (
-        <div>loading</div>
+      {fetchingTokens ? (
+        <div>fetching tokens..</div>
       ) : (
         <div>
-          {tokenBalances.map((tokenBalance) => (
-            <div key={tokenBalance[0]}>
-              <span>{tokenBalance[0]}</span>: <span>{tokenBalance[1]}</span>
-            </div>
-          ))}
+          {tokenBalances.map((tokenBalance) => {
+            const [address, balance, approvedSum, pending] = tokenBalance
+            return (
+              balance > 0 && (
+                <div key={address}>
+                  <span>{address}</span>: <span>{balance}</span>{' '}
+                  <button
+                    onClick={() => handleApprove(tokenBalance)}
+                    disabled={approvedSum >= balance || pending}
+                  >
+                    {pending
+                      ? 'pending'
+                      : approvedSum >= balance
+                      ? 'Approved'
+                      : 'Approve'}
+                  </button>
+                </div>
+              )
+            )
+          })}
         </div>
       )}
     </div>
