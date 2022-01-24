@@ -1,9 +1,12 @@
-import { Web3Context } from '../context/Web3Context'
 import { useContext } from 'react'
+import { Web3Context } from '../context/Web3Context'
+import { ellipseAddress, getChainData } from '../lib/utilities'
 
 const Header = () => {
   const { state, connect, disconnect } = useContext(Web3Context)
-  const { web3Provider } = state
+  const { web3Provider, address, chainId } = state
+
+  const chainData = getChainData(chainId)
 
   return (
     <header>
@@ -16,6 +19,18 @@ const Header = () => {
         <button className="button" type="button" onClick={connect}>
           Connect
         </button>
+      )}
+      {address && (
+        <div>
+          <div>
+            <span>Network: </span>
+            <span>{chainData?.name}</span>
+          </div>
+          <div>
+            <span>Address: </span>
+            <span>{ellipseAddress(address)}</span>
+          </div>
+        </div>
       )}
     </header>
   )

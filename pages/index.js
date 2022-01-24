@@ -60,27 +60,11 @@ export const Home = () => {
 
   return (
     <div className="container">
-      <Header />
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <header>
-        {address && (
-          <div className="grid">
-            <div>
-              <p className="mb-1">Network:</p>
-              <p>{chainData?.name}</p>
-            </div>
-            <div>
-              <p className="mb-1">Address:</p>
-              <p>{ellipseAddress(address)}</p>
-            </div>
-          </div>
-        )}
-      </header>
-
+      <Header />
       <main>
         <TokenBalances />
       </main>
