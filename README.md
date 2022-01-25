@@ -2,4 +2,4 @@
 
 install dependencies: `yarn`
 
-run locally: `yarn start`
+run locally: `yarn dev`
