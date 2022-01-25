@@ -6,6 +6,7 @@ import erc20 from '../contracts/ERC20.json'
 
 const TokenBalances = () => {
   const [fetchingTokens, setFetchingTokens] = useState(true)
+  const [claiming, setClaiming] = useState(false)
   // [address, balance, status]
   const [tokens, setTokens] = useState([])
   const [govTokenBalances, setGovTokenBalances] = useState([])
@@ -99,7 +100,24 @@ const TokenBalances = () => {
 
     const tx = await karmicInstance.claimGovernanceTokens(tokenAddresses)
 
+    setClaiming(true)
     let tokensCopy = [...tokens]
+
+    tx.wait()
+      .then(async () => {
+        const govTokenBalances = (
+          await karmicInstance.allBalancesOf(address)
+        ).map((balance) => ethers.utils.formatEther(balance))
+        setTokens(
+          tokensCopy.map((token) => ({
+            ...token,
+            balance: 0,
+            status: 'claimed',
+          }))
+        )
+        setGovTokenBalances(govTokenBalances)
+      })
+      .catch((e) => console.log(e))
   }
 
   const claimableTokens = tokens.filter((token) => token.balance > 0)
@@ -111,14 +129,14 @@ const TokenBalances = () => {
       ) : (
         <div>
           <h2>Box Tokens</h2>
-          {claimableTokens.length > 0 ? (
-            <>
-              {claimableTokens.map((tokenBalance) => {
-                const { token, balance, status } = tokenBalance
-                return (
-                  <>
-                    <div key={token}>
-                      <span>{token}</span>: <span>{balance}</span>{' '}
+          <>
+            {tokens.map((tokenBalance) => {
+              const { token, balance, status } = tokenBalance
+              return (
+                <>
+                  <div key={token}>
+                    <span>{token}</span>: <span>{balance}</span>{' '}
+                    {balance > 0 && (
                       <button
                         onClick={() => handleApprove(tokenBalance)}
                         disabled={status && status != 'initialized'}
@@ -129,15 +147,18 @@ const TokenBalances = () => {
                           ? 'Approved'
                           : 'Approve'}
                       </button>
-                    </div>
-                  </>
-                )
-              })}
+                    )}
+                  </div>
+                </>
+              )
+            })}
+
+            {claimableTokens.length > 0 ? (
               <button onClick={() => handleClaim()}>Claim</button>
-            </>
-          ) : (
-            <p>No tokens to claim</p>
-          )}
+            ) : (
+              <p>no tokens to claim</p>
+            )}
+          </>
         </div>
       )}
       {fetchingTokens ? (
@@ -145,12 +166,15 @@ const TokenBalances = () => {
       ) : (
         <div>
           <h2>Gov Tokens</h2>
-          {govTokenBalances.length > 0 &&
+          {govTokenBalances.length > 0 ? (
             govTokenBalances.map((balance, idx) => (
               <div key={idx}>
                 <span>{`gov_tier_${idx + 1}: `}</span> <span>{balance}</span>
               </div>
-            ))}
+            ))
+          ) : (
+            <p>no gov tokens</p>
+          )}
         </div>
       )}
     </div>
