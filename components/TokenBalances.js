@@ -5,7 +5,7 @@ import karmicContract from '../contracts/Karmic.json'
 import erc20 from '../contracts/ERC20.json'
 
 const TokenBalances = () => {
-  const [fetchingTokens, setFetchingTokens] = useState(true)
+  const [fetchingBoxTokens, setFetchingBoxTokens] = useState(true)
   // [address, balance, status]
   const [tokens, setTokens] = useState([])
   const { state } = useContext(Web3Context)
@@ -34,7 +34,7 @@ const TokenBalances = () => {
             karmicContract.address
           )
 
-          const status = isKarmicApproved > 0 ? 'approved' : 'initialized'
+          const status = isKarmicApproved > 0 ? 'approved' : null
 
           return {
             token,
@@ -45,7 +45,7 @@ const TokenBalances = () => {
       )
 
       setTokens(tokens)
-      setFetchingTokens(false)
+      setFetchingBoxTokens(false)
     }
 
     if (web3Provider) {
@@ -96,17 +96,20 @@ const TokenBalances = () => {
     let tokensCopy = [...tokens]
   }
 
+  const claimableTokens = tokens.filter((token) => token.balance > 0)
+
   return (
     <div>
-      <h1>Token Balances</h1>
-      {fetchingTokens ? (
+      <h1>Tokens</h1>
+      {fetchingBoxTokens ? (
         <div>fetching tokens..</div>
       ) : (
         <div>
-          {tokens.map((tokenBalance) => {
-            const { token, balance, status } = tokenBalance
-            return (
-              balance > 0 && (
+          <h2>Box Tokens</h2>
+          {claimableTokens.length > 0 ? (
+            claimableTokens.map((tokenBalance) => {
+              const { token, balance, status } = tokenBalance
+              return (
                 <>
                   <div key={token}>
                     <span>{token}</span>: <span>{balance}</span>{' '}
@@ -123,11 +126,15 @@ const TokenBalances = () => {
                   </div>
                 </>
               )
-            )
-          })}
+            })
+          ) : (
+            <p>No tokens to claim</p>
+          )}
           <button onClick={() => handleClaim()}>Claim</button>
         </div>
       )}
+
+      {}
     </div>
   )
 }
