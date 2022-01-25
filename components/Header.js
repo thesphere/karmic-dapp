@@ -10,16 +10,7 @@ const Header = () => {
 
   return (
     <header>
-      <h1>Header</h1>
-      {web3Provider ? (
-        <button className="button" type="button" onClick={disconnect}>
-          Disconnect
-        </button>
-      ) : (
-        <button className="button" type="button" onClick={connect}>
-          Connect
-        </button>
-      )}
+      <h1>Wallet Info</h1>
       {address && (
         <div>
           <div>
@@ -31,6 +22,15 @@ const Header = () => {
             <span>{ellipseAddress(address)}</span>
           </div>
         </div>
+      )}
+      {web3Provider ? (
+        <button className="button" type="button" onClick={disconnect}>
+          Disconnect
+        </button>
+      ) : (
+        <button className="button" type="button" onClick={connect}>
+          Connect
+        </button>
       )}
     </header>
   )
