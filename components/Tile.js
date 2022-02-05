@@ -14,6 +14,7 @@ const Tile = ({ props }) => {
       <div key={token} className="tile">
         <span>{title}</span>
         <img src="http://localhost:3000/cat.jpeg" />
+        <div></div>
         {balance > 0 ? (
           <>
             <p>{balance}</p>

@@ -132,9 +132,28 @@ const TokenBalances = () => {
   }
 
   const claimableTokens = tokens.filter((token) => token.balance > 0)
+  const approvedTokens = tokens.filter((token) => token.status == 'approved')
 
   return (
     <>
+      <div className="claim-container">
+        {claimableTokens.length > 0 ? (
+          <>
+            <button
+              className="claim-button"
+              onClick={() => handleClaim()}
+              disabled={claimableTokens.length != approvedTokens.length}
+            >
+              Claim
+            </button>
+            {claimableTokens.length != approvedTokens.length && (
+              <p>approve tokens first</p>
+            )}
+          </>
+        ) : (
+          <p>no tokens to claim</p>
+        )}
+      </div>
       <div className="main-container">
         {address ? (
           fetchingTokens ? (
@@ -162,17 +181,9 @@ const TokenBalances = () => {
           <p>connect wallet to see NFTs</p>
         )}
       </div>
-      <div>
-        {claimableTokens.length > 0 ? (
-          <button onClick={() => handleClaim()}>Claim</button>
-        ) : (
-          <p>no tokens to claim</p>
-        )}
-      </div>
 
       <style jsx>{`
         .main-container {
-          background-color: red;
           flex-grow: 1;
           display: flex;
           align-items: center;
@@ -180,11 +191,23 @@ const TokenBalances = () => {
         }
 
         .tile-container {
-          background-color: green;
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
           max-width: 1200px;
+        }
+
+        .claim-container {
+          flex-grow: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          align-items: center;
+        }
+
+        .claim-button {
+          width: 200px;
+          height: 50px;
         }
       `}</style>
     </>
