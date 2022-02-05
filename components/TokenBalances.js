@@ -1,9 +1,10 @@
 import { ethers } from 'ethers'
 import { useEffect, useState, useContext } from 'react'
-import Tile from './Tile'
+import ClaimArea from './ClaimArea'
 import { Web3Context } from '../context/Web3Context'
 import karmicContract from '../contracts/Karmic.json'
 import erc20 from '../contracts/ERC20.json'
+import TokenTiles from './TokenTiles'
 
 const TokenBalances = () => {
   const [fetchingTokens, setFetchingTokens] = useState(true)
@@ -134,110 +135,23 @@ const TokenBalances = () => {
   const claimableTokens = tokens.filter((token) => token.balance > 0)
   const approvedTokens = tokens.filter((token) => token.status == 'approved')
 
-  const renderClaimArea = () => {
-    if (claimableTokens.length > 0) {
-      return (
-        <>
-          <button
-            className="claim-button"
-            onClick={() => handleClaim()}
-            disabled={claimableTokens.length != approvedTokens.length}
-          >
-            Claim Governance Tokens
-          </button>
-          {claimableTokens.length != approvedTokens.length && (
-            <p>all tokens must be approved</p>
-          )}
-        </>
-      )
-    } else if (govTokenBalances.find((balance) => balance > 0)) {
-      return <p>already claimed gov tokens</p>
-    } else {
-      return <p>no tokens to claim</p>
-    }
-  }
-
   return (
     <>
-      <div className="claim-container">{renderClaimArea()}</div>
-      <div className="main-container">
-        {address ? (
-          fetchingTokens ? (
-            <p>fetching box tokens..</p>
-          ) : (
-            <div className="tile-container">
-              {tokens.map((tokenBalance, idx) => {
-                const { token, balance, status, title, image } = tokenBalance
-                return (
-                  <Tile
-                    props={{
-                      token,
-                      balance,
-                      status,
-                      title,
-                      image,
-                      govTokenBalance: govTokenBalances[idx],
-                      handleApprove,
-                    }}
-                  />
-                )
-              })}
-            </div>
-          )
-        ) : (
-          <p>connect wallet to see NFTs</p>
-        )}
-      </div>
-
-      <style jsx>{`
-        .main-container {
-          flex-grow: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .tile-container {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          max-width: 1200px;
-        }
-
-        .claim-container {
-          flex-grow: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-end;
-          align-items: center;
-        }
-
-        .claim-button {
-          width: 200px;
-          height: 50px;
-        }
-      `}</style>
+      <ClaimArea
+        claimableTokens={claimableTokens}
+        approvedTokens={approvedTokens}
+        govTokenBalances={govTokenBalances}
+        handleClaim={handleClaim}
+      />
+      <TokenTiles
+        address={address}
+        fetchingTokens={fetchingTokens}
+        tokens={tokens}
+        govTokenBalances={govTokenBalances}
+        handleApprove={handleApprove}
+      />
     </>
   )
 }
 
 export default TokenBalances
-
-{
-  /* {fetchingTokens ? (
-          <p>fetching gov tokens..</p>
-        ) : (
-          <div>
-            <h2 className="main-container">Gov Tokens</h2>
-            {govTokenBalances.length > 0 ? (
-              govTokenBalances.map((balance, idx) => (
-                <div key={idx}>
-                  <span>{`gov_tier_${idx + 1}: `}</span> <span>{balance}</span>
-                </div>
-              ))
-            ) : (
-              <p>no gov tokens</p>
-            )}
-          </div>
-        )} */
-}
