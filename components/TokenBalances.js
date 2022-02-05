@@ -132,46 +132,35 @@ const TokenBalances = () => {
   }
 
   const claimableTokens = tokens.filter((token) => token.balance > 0)
+
   return (
     <>
       <div className="main-container">
-        {fetchingTokens ? (
-          <p>fetching box tokens..</p>
+        {address ? (
+          fetchingTokens ? (
+            <p>fetching box tokens..</p>
+          ) : (
+            <div className="tile-container">
+              {tokens.map((tokenBalance) => {
+                const { token, balance, status, title, image } = tokenBalance
+                return (
+                  <Tile
+                    props={{
+                      token,
+                      balance,
+                      status,
+                      title,
+                      image,
+                      handleApprove,
+                    }}
+                  />
+                )
+              })}
+            </div>
+          )
         ) : (
-          <div className="tile-container">
-            {tokens.map((tokenBalance) => {
-              const { token, balance, status, title, image } = tokenBalance
-              return (
-                <Tile
-                  props={{
-                    token,
-                    balance,
-                    status,
-                    title,
-                    image,
-                    handleApprove,
-                  }}
-                />
-              )
-            })}
-          </div>
+          <p>connect wallet to see NFTs</p>
         )}
-        {/* {fetchingTokens ? (
-          <p>fetching gov tokens..</p>
-        ) : (
-          <div>
-            <h2 className="main-container">Gov Tokens</h2>
-            {govTokenBalances.length > 0 ? (
-              govTokenBalances.map((balance, idx) => (
-                <div key={idx}>
-                  <span>{`gov_tier_${idx + 1}: `}</span> <span>{balance}</span>
-                </div>
-              ))
-            ) : (
-              <p>no gov tokens</p>
-            )}
-          </div>
-        )} */}
       </div>
       <div>
         {claimableTokens.length > 0 ? (
@@ -203,3 +192,22 @@ const TokenBalances = () => {
 }
 
 export default TokenBalances
+
+{
+  /* {fetchingTokens ? (
+          <p>fetching gov tokens..</p>
+        ) : (
+          <div>
+            <h2 className="main-container">Gov Tokens</h2>
+            {govTokenBalances.length > 0 ? (
+              govTokenBalances.map((balance, idx) => (
+                <div key={idx}>
+                  <span>{`gov_tier_${idx + 1}: `}</span> <span>{balance}</span>
+                </div>
+              ))
+            ) : (
+              <p>no gov tokens</p>
+            )}
+          </div>
+        )} */
+}
