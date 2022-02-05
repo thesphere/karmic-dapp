@@ -24,6 +24,7 @@ const TokenTiles = (props) => {
                       govTokenBalance: govTokenBalances[idx],
                       handleApprove,
                     }}
+                    key={token}
                   />
                 )
               })}

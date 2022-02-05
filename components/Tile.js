@@ -17,30 +17,6 @@ const Tile = ({ props }) => {
     govTokenBalance,
   } = props
 
-  const renderTileInfo = () => {
-    if (govTokenBalance == 0 && balance == 0) {
-      return
-    } else if (govTokenBalance == 0 && balance > 0) {
-      return (
-        <button
-          className="approve-button"
-          onClick={() =>
-            handleApprove({ token, balance, status, image, title })
-          }
-          disabled={status && status != 'initialized'}
-        >
-          {status == 'pending'
-            ? 'pending approval'
-            : status == 'approved'
-            ? 'Approved'
-            : 'Approve'}
-        </button>
-      )
-    } else {
-      return <p>Governance Power: {govTokenBalance}</p>
-    }
-  }
-
   return (
     <>
       <div key={token} className="tile">
@@ -48,7 +24,24 @@ const Tile = ({ props }) => {
         <img src="http://localhost:3000/cat.jpeg" />
         <div className="button-container">
           <>
-            {renderTileInfo()}{' '}
+            {govTokenBalance == 0 && balance == 0 ? null : govTokenBalance ==
+                0 && balance > 0 ? (
+              <button
+                className="approve-button"
+                onClick={() =>
+                  handleApprove({ token, balance, status, image, title })
+                }
+                disabled={status && status != 'initialized'}
+              >
+                {status == 'pending'
+                  ? 'pending approval'
+                  : status == 'approved'
+                  ? 'Approved'
+                  : 'Approve'}
+              </button>
+            ) : (
+              <p>Governance Power: {govTokenBalance}</p>
+            )}
             <a href={`https://g.mirror.xyz/crowdfunds/${token}`}>
               go to crowdfund
             </a>

@@ -14,7 +14,7 @@ const TokenBalances = () => {
   const [govTokenBalances, setGovTokenBalances] = useState([])
   const { state } = useContext(Web3Context)
   const { web3Provider, address } = state
-  console.log(govTokenBalances)
+
   useEffect(() => {
     const karmicInstance = new ethers.Contract(
       karmicContract.address,
