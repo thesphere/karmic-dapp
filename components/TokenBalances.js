@@ -13,7 +13,7 @@ const TokenBalances = () => {
   const [govTokenBalances, setGovTokenBalances] = useState([])
   const { state } = useContext(Web3Context)
   const { web3Provider, address } = state
-
+  console.log(govTokenBalances)
   useEffect(() => {
     const karmicInstance = new ethers.Contract(
       karmicContract.address,
@@ -144,10 +144,10 @@ const TokenBalances = () => {
               onClick={() => handleClaim()}
               disabled={claimableTokens.length != approvedTokens.length}
             >
-              Claim
+              Claim Governance Tokens
             </button>
             {claimableTokens.length != approvedTokens.length && (
-              <p>approve tokens first</p>
+              <p>all tokens must be approved</p>
             )}
           </>
         ) : (
@@ -160,7 +160,7 @@ const TokenBalances = () => {
             <p>fetching box tokens..</p>
           ) : (
             <div className="tile-container">
-              {tokens.map((tokenBalance) => {
+              {tokens.map((tokenBalance, idx) => {
                 const { token, balance, status, title, image } = tokenBalance
                 return (
                   <Tile
@@ -170,6 +170,7 @@ const TokenBalances = () => {
                       status,
                       title,
                       image,
+                      govTokenBalance: govTokenBalances[idx],
                       handleApprove,
                     }}
                   />

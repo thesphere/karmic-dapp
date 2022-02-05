@@ -33,6 +33,7 @@ const Header = () => {
           display: flex;
           align-items: center;
           justify-content: flex-end;
+          height: 50px;
         }
 
         .wallet-container {

@@ -73,7 +73,7 @@ export const Home = () => {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          height: 100vh;
+          height: 100vh - 50px;
         }
 
         main {
