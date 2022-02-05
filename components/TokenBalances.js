@@ -8,7 +8,7 @@ import erc20 from '../contracts/ERC20.json'
 const TokenBalances = () => {
   const [fetchingTokens, setFetchingTokens] = useState(true)
   const [claiming, setClaiming] = useState(false)
-  // [address, balance, status]
+  // [address, balance, status, name, image]
   const [tokens, setTokens] = useState([])
   const [govTokenBalances, setGovTokenBalances] = useState([])
   const { state } = useContext(Web3Context)
@@ -32,6 +32,14 @@ const TokenBalances = () => {
             web3Provider
           )
           const balance = await tokenInstance.balanceOf(state.address)
+          const id = await karmicInstance.boxTokenTiers(token)
+          const metadata = await karmicInstance.uri(id)
+
+          // TODO: fetch metadata (e.g. with axios)
+          // const { title, image } = metadata
+          const title = 'evil cat'
+          const image = 'http://localhost:3000/cat.jpg'
+
           const isKarmicApproved = await tokenInstance.allowance(
             address,
             karmicContract.address
@@ -43,6 +51,8 @@ const TokenBalances = () => {
             token,
             balance: ethers.utils.formatEther(balance),
             status,
+            title,
+            image,
           }
         })
       )
@@ -130,8 +140,19 @@ const TokenBalances = () => {
         ) : (
           <div className="tile-container">
             {tokens.map((tokenBalance) => {
-              const { token, balance, status } = tokenBalance
-              return <Tile props={{ token, balance, status, handleApprove }} />
+              const { token, balance, status, title, image } = tokenBalance
+              return (
+                <Tile
+                  props={{
+                    token,
+                    balance,
+                    status,
+                    title,
+                    image,
+                    handleApprove,
+                  }}
+                />
+              )
             })}
           </div>
         )}
@@ -173,9 +194,8 @@ const TokenBalances = () => {
           background-color: green;
           display: flex;
           flex-wrap: wrap;
-          height: 40%;
-          width: 80%;
-          justify-content: space-between;
+          justify-content: center;
+          max-width: 1200px;
         }
       `}</style>
     </>

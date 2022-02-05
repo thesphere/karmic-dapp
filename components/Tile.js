@@ -7,23 +7,33 @@ import erc20 from '../contracts/ERC20.json'
 const Tile = ({ props }) => {
   const { state } = useContext(Web3Context)
   const { web3Provider, address } = state
-  const { token, balance, status, handleApprove } = props
+  const { token, balance, status, image, title, handleApprove } = props
 
   return (
     <>
       <div key={token} className="tile">
-        <span>{token}</span>: <span>{balance}</span>{' '}
-        {balance > 0 && (
-          <button
-            onClick={() => handleApprove({ token, balance, status })}
-            disabled={status && status != 'initialized'}
-          >
-            {status == 'pending'
-              ? 'pending approval'
-              : status == 'approved'
-              ? 'Approved'
-              : 'Approve'}
-          </button>
+        <span>{title}</span>
+        <img src="http://localhost:3000/cat.jpeg" />
+        {balance > 0 ? (
+          <>
+            <p>{balance}</p>
+            <button
+              onClick={() =>
+                handleApprove({ token, balance, status, image, title })
+              }
+              disabled={status && status != 'initialized'}
+            >
+              {status == 'pending'
+                ? 'pending approval'
+                : status == 'approved'
+                ? 'Approved'
+                : 'Approve'}
+            </button>
+          </>
+        ) : (
+          <a href={`https://g.mirror.xyz/crowdfunds/${token}`}>
+            go to crowdfund
+          </a>
         )}
       </div>
 
@@ -31,10 +41,20 @@ const Tile = ({ props }) => {
         .tile {
           background-color: yellow;
           border: 1px solid black;
+          display: flex;
+          flex-direction: column;
+          width: 300px;
+          height: 300px;
+          margin: 30px;
+        }
+
+        img {
+          max-height: 200px;
+          width: auto;
         }
       `}</style>
     </>
   )
 }
-
+//https://g.mirror.xyz/crowdfunds/0x1B7D237406f51978d48BFCEc2211c5EB97a344AA
 export default Tile
