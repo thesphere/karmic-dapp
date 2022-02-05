@@ -134,26 +134,32 @@ const TokenBalances = () => {
   const claimableTokens = tokens.filter((token) => token.balance > 0)
   const approvedTokens = tokens.filter((token) => token.status == 'approved')
 
+  const renderClaimArea = () => {
+    if (claimableTokens.length > 0) {
+      return (
+        <>
+          <button
+            className="claim-button"
+            onClick={() => handleClaim()}
+            disabled={claimableTokens.length != approvedTokens.length}
+          >
+            Claim Governance Tokens
+          </button>
+          {claimableTokens.length != approvedTokens.length && (
+            <p>all tokens must be approved</p>
+          )}
+        </>
+      )
+    } else if (govTokenBalances.find((balance) => balance > 0)) {
+      return <p>already claimed gov tokens</p>
+    } else {
+      return <p>no tokens to claim</p>
+    }
+  }
+
   return (
     <>
-      <div className="claim-container">
-        {claimableTokens.length > 0 ? (
-          <>
-            <button
-              className="claim-button"
-              onClick={() => handleClaim()}
-              disabled={claimableTokens.length != approvedTokens.length}
-            >
-              Claim Governance Tokens
-            </button>
-            {claimableTokens.length != approvedTokens.length && (
-              <p>all tokens must be approved</p>
-            )}
-          </>
-        ) : (
-          <p>no tokens to claim</p>
-        )}
-      </div>
+      <div className="claim-container">{renderClaimArea()}</div>
       <div className="main-container">
         {address ? (
           fetchingTokens ? (
