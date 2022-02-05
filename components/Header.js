@@ -35,9 +35,6 @@ const Header = () => {
           justify-content: flex-end;
         }
 
-        .header-container {
-        }
-
         .wallet-container {
           width: 300px;
           display: flex;

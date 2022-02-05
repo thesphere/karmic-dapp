@@ -58,16 +58,28 @@ export const Home = () => {
   }, [provider, disconnect, dispatch])
 
   return (
-    <div className="container">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Header />
-      <main>
+    <>
+      <div className="container">
+        <Head>
+          <title>Create Next App</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <Header />
         <TokenBalances />
-      </main>
-    </div>
+      </div>
+
+      <style jsx>{`
+        .container {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          height: 100vh;
+        }
+
+        main {
+        }
+      `}</style>
+    </>
   )
 }
 
