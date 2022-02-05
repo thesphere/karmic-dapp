@@ -9,30 +9,43 @@ const Header = () => {
   const chainData = getChainData(chainId)
 
   return (
-    <header>
-      <h1>Wallet Info</h1>
-      {address && (
-        <div>
-          <div>
-            <span>Network: </span>
-            <span>{chainData?.name}</span>
-          </div>
-          <div>
-            <span>Address: </span>
+    <>
+      <header>
+        {address && (
+          <div className="wallet-container">
             <span>{ellipseAddress(address)}</span>
+            <span>{chainData.name}</span>
           </div>
-        </div>
-      )}
-      {web3Provider ? (
-        <button className="button" type="button" onClick={disconnect}>
-          Disconnect
-        </button>
-      ) : (
-        <button className="button" type="button" onClick={connect}>
-          Connect
-        </button>
-      )}
-    </header>
+        )}
+        {web3Provider ? (
+          <button className="button" type="button" onClick={disconnect}>
+            Disconnect
+          </button>
+        ) : (
+          <button className="button" type="button" onClick={connect}>
+            Connect
+          </button>
+        )}
+      </header>
+
+      <style jsx>{`
+        header {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+        }
+
+        .header-container {
+        }
+
+        .wallet-container {
+          width: 300px;
+          display: flex;
+          align-items: center;
+          justify-content: space-evenly;
+        }
+      `}</style>
+    </>
   )
 }
 
