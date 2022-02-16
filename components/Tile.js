@@ -8,6 +8,8 @@ const Tile = ({ props }) => {
   const { state } = useContext(Web3Context)
   const { web3Provider, address } = state
   const {
+    reclaim,
+    donate,
     token,
     balance,
     status,
@@ -20,25 +22,28 @@ const Tile = ({ props }) => {
   return (
     <>
       <div key={token} className="tile">
-        <span>{title}</span>
         <img src="http://localhost:3000/cat.jpeg" />
         <div className="button-container">
           <>
             {govTokenBalance == 0 && balance == 0 ? null : govTokenBalance ==
                 0 && balance > 0 ? (
-              <button
-                className="approve-button"
-                onClick={() =>
-                  handleApprove({ token, balance, status, image, title })
-                }
-                disabled={status && status != 'initialized'}
-              >
-                {status == 'pending'
-                  ? 'pending approval'
-                  : status == 'approved'
-                  ? 'Approved'
-                  : 'Approve'}
-              </button>
+              <>
+                <button
+                  className="approve-button"
+                  onClick={() =>
+                    handleApprove({ token, balance, status, image, title })
+                  }
+                  disabled={status && status != 'initialized'}
+                >
+                  {status == 'pending'
+                    ? 'pending approval'
+                    : status == 'approved'
+                    ? 'Approved'
+                    : 'Approve'}
+                </button>
+                <button onClick={() => reclaim(token, balance)}>Reclaim</button>
+                <button onClick={() => donate(token)}>Donate</button>
+              </>
             ) : (
               <p>Governance Power: {govTokenBalance}</p>
             )}

@@ -1,7 +1,7 @@
 import Tile from './Tile'
 
 const TokenTiles = (props) => {
-  const { address, fetchingTokens, tokens, govTokenBalances, handleApprove } =
+  const { address, fetchingTokens, tokens, govTokenBalances, handleApprove, reclaim, donate } =
     props
   return (
     <>
@@ -16,6 +16,8 @@ const TokenTiles = (props) => {
                 return (
                   <Tile
                     props={{
+                      reclaim,
+                      donate,
                       token,
                       balance,
                       status,

@@ -5,6 +5,7 @@ import { Web3Context } from '../context/Web3Context'
 import karmicContract from '../contracts/Karmic.json'
 import erc20 from '../contracts/ERC20.json'
 import TokenTiles from './TokenTiles'
+import { parseUnits } from 'ethers/lib/utils'
 
 const TokenBalances = () => {
   const [fetchingTokens, setFetchingTokens] = useState(true)
@@ -21,36 +22,48 @@ const TokenBalances = () => {
       karmicContract.abi,
       web3Provider
     )
+    console.log(karmicInstance)
+    window.karmicInstance = karmicInstance
 
     const fetchTokenBalances = async () => {
+      console.log(web3Provider)
       const boxTokenAddresses = await karmicInstance.getBoxTokens()
 
       const boxTokens = await Promise.all(
         boxTokenAddresses.map(async (token) => {
-          const tokenInstance = new ethers.Contract(
-            token,
-            erc20.abi,
-            web3Provider
-          )
-          const balance = await tokenInstance.balanceOf(state.address)
-          const id = await karmicInstance.boxTokenTiers(token)
-          const metadata = await karmicInstance.uri(id)
+          const isBoxToken =
+            token != '0x0000000000000000000000000000000000000000'
+          let balance = ethers.BigNumber.from(0),
+            isKarmicApproved = ethers.BigNumber.from(0)
+          if (isBoxToken) {
+            console.log('no error')
+            const tokenInstance = new ethers.Contract(
+              token,
+              erc20.abi,
+              web3Provider
+            )
+            console.log(tokenInstance)
+            balance = await tokenInstance.balanceOf(state.address)
+            console.log('Error')
+
+            isKarmicApproved = await tokenInstance.allowance(
+              address,
+              karmicContract.address
+            )
+          }
+          const boxToken = await karmicInstance.boxTokenTiers(token)
+          const metadata = await karmicInstance.uri(boxToken.id)
 
           // TODO: fetch metadata (e.g. with axios)
           // const { title, image } = metadata
           const title = 'evil cat'
           const image = 'http://localhost:3000/cat.jpg'
 
-          const isKarmicApproved = await tokenInstance.allowance(
-            address,
-            karmicContract.address
-          )
-
           const status = isKarmicApproved > 0 ? 'approved' : null
 
           return {
             token,
-            balance: ethers.utils.formatEther(balance),
+            balance: isBoxToken ? ethers.utils.formatEther(balance) : balance,
             status,
             title,
             image,
@@ -71,6 +84,37 @@ const TokenBalances = () => {
       fetchTokenBalances()
     }
   }, [web3Provider, address])
+
+  const approveAllTokens = async () => {
+    console.log('Approving all the tokens')
+    const tokensCopy = tokens.filter(
+      (token) => token.token != '0x0000000000000000000000000000000000000000'
+    )
+    tokensCopy.map(async (token) => {
+      if (parseFloat(token.balance) > 0 && token.status !== "approved") {
+        console.log('Approving token ', token.token)
+        return await handleApprove(token)
+      }
+    })
+  }
+
+  const supportSphere = async (amount) => {
+    console.log(web3Provider);
+    await (await web3Provider.getSigner()).sendTransaction({from: address, to: karmicInstance.address, value: amount});
+  }
+
+  const donate = async (token) => {
+    const signer = await web3Provider.getSigner(address);
+    await karmicInstance.connect(signer).claimGovernanceTokens([token]);
+  }
+
+  const reclaim = async (token, amount) => {
+    const signer = await web3Provider.getSigner(address);
+    const amountToWithdraw = parseUnits(amount, 18);
+    console.log(signer, token, amountToWithdraw, amount);
+    console.log(await karmicInstance.connect(signer).estimateGas.withdraw(token, amountToWithdraw))
+    await karmicInstance.connect(signer).withdraw(token, amountToWithdraw.toString());
+  }
 
   const handleApprove = async (token) => {
     let tokenCopy = { ...token }
@@ -143,9 +187,13 @@ const TokenBalances = () => {
         govTokenBalances={govTokenBalances}
         handleClaim={handleClaim}
       />
+      <button onClick={()=>supportSphere(parseUnits("1", 18))}>supportSphere</button>
+      <button onClick={approveAllTokens}>Approve all tokens</button>
       <TokenTiles
         address={address}
         fetchingTokens={fetchingTokens}
+        reclaim={reclaim}
+        donate={donate}
         tokens={tokens}
         govTokenBalances={govTokenBalances}
         handleApprove={handleApprove}
