@@ -1,10 +1,10 @@
 import { Navbar } from 'react-bootstrap'
 import ConnectWallet from './ConnectWallet'
+
 const DappNav = () => {
   return (
-    <Navbar bg="dark" variant="dark">
-        <div></div>
-      <Navbar.Brand className="justify-content-center" href="#home">
+    <Navbar className="bg-transparent" bg="dark" variant="dark">
+      <Navbar.Brand className="justify-content-start" href="#home">
         <img
           alt=""
           src="./SphereLogo.png"

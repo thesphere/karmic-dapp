@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { Web3Context } from '../context/Web3Context'
 import { ellipseAddress, getChainData } from '../lib/utilities'
+import Button from './Button'
 
 
 const ConnectWallet = () => {
@@ -13,18 +14,16 @@ const ConnectWallet = () => {
       <>
       {web3Provider ? (
         address && (
-            <div className="wallet-container">
+            <div className="wallet-container rounded-purple-container bg-transparent">
                 <span>500 Karmic</span>
-                {'  '}|{'  '}
+                <span style={{marginLeft: "10px", marginRight: "10px"}}>|</span>
                 <span>1 ETH</span>
-                {'  '}|{'  '}
+                <span style={{marginLeft: "10px", marginRight: "10px"}}>|</span>
               <span>{ellipseAddress(address)}</span>
             </div>
           )
       ) : (
-        <button className="button" type="button" onClick={connect}>
-          Connect
-        </button>
+        <Button action={connect} text={"Connect"}/>
       )}
       </>
   )
