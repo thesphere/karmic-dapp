@@ -1,13 +1,16 @@
 import { ethers } from 'ethers'
 import { useEffect, useState, useContext } from 'react'
+import ClaimArea from './ClaimArea'
 import { Web3Context } from '../context/Web3Context'
 import karmicContract from '../contracts/Karmic.json'
 import erc20 from '../contracts/ERC20.json'
+import TokenTiles from './TokenTiles'
+import { parseUnits } from 'ethers/lib/utils'
 
 const TokenBalances = () => {
   const [fetchingTokens, setFetchingTokens] = useState(true)
   const [claiming, setClaiming] = useState(false)
-  // [address, balance, status]
+  // [address, balance, status, name, image]
   const [tokens, setTokens] = useState([])
   const [govTokenBalances, setGovTokenBalances] = useState([])
   const { state } = useContext(Web3Context)
@@ -19,29 +22,51 @@ const TokenBalances = () => {
       karmicContract.abi,
       web3Provider
     )
+    console.log(karmicInstance)
+    window.karmicInstance = karmicInstance
 
     const fetchTokenBalances = async () => {
+      console.log(web3Provider)
       const boxTokenAddresses = await karmicInstance.getBoxTokens()
 
       const boxTokens = await Promise.all(
         boxTokenAddresses.map(async (token) => {
-          const tokenInstance = new ethers.Contract(
-            token,
-            erc20.abi,
-            web3Provider
-          )
-          const balance = await tokenInstance.balanceOf(state.address)
-          const isKarmicApproved = await tokenInstance.allowance(
-            address,
-            karmicContract.address
-          )
+          const isBoxToken =
+            token != '0x0000000000000000000000000000000000000000'
+          let balance = ethers.BigNumber.from(0),
+            isKarmicApproved = ethers.BigNumber.from(0)
+          if (isBoxToken) {
+            console.log('no error')
+            const tokenInstance = new ethers.Contract(
+              token,
+              erc20.abi,
+              web3Provider
+            )
+            console.log(tokenInstance)
+            balance = await tokenInstance.balanceOf(state.address)
+            console.log('Error')
+
+            isKarmicApproved = await tokenInstance.allowance(
+              address,
+              karmicContract.address
+            )
+          }
+          const boxToken = await karmicInstance.boxTokenTiers(token)
+          const metadata = await karmicInstance.uri(boxToken.id)
+
+          // TODO: fetch metadata (e.g. with axios)
+          // const { title, image } = metadata
+          const title = 'evil cat'
+          const image = 'http://localhost:3000/cat.jpg'
 
           const status = isKarmicApproved > 0 ? 'approved' : null
 
           return {
             token,
-            balance: ethers.utils.formatEther(balance),
+            balance: isBoxToken ? ethers.utils.formatEther(balance) : balance,
             status,
+            title,
+            image,
           }
         })
       )
@@ -59,6 +84,37 @@ const TokenBalances = () => {
       fetchTokenBalances()
     }
   }, [web3Provider, address])
+
+  const approveAllTokens = async () => {
+    console.log('Approving all the tokens')
+    const tokensCopy = tokens.filter(
+      (token) => token.token != '0x0000000000000000000000000000000000000000'
+    )
+    tokensCopy.map(async (token) => {
+      if (parseFloat(token.balance) > 0 && token.status !== "approved") {
+        console.log('Approving token ', token.token)
+        return await handleApprove(token)
+      }
+    })
+  }
+
+  const supportSphere = async (amount) => {
+    console.log(web3Provider);
+    await (await web3Provider.getSigner()).sendTransaction({from: address, to: karmicInstance.address, value: amount});
+  }
+
+  const donate = async (token) => {
+    const signer = await web3Provider.getSigner(address);
+    await karmicInstance.connect(signer).claimGovernanceTokens([token]);
+  }
+
+  const reclaim = async (token, amount) => {
+    const signer = await web3Provider.getSigner(address);
+    const amountToWithdraw = parseUnits(amount, 18);
+    console.log(signer, token, amountToWithdraw, amount);
+    console.log(await karmicInstance.connect(signer).estimateGas.withdraw(token, amountToWithdraw))
+    await karmicInstance.connect(signer).withdraw(token, amountToWithdraw.toString());
+  }
 
   const handleApprove = async (token) => {
     let tokenCopy = { ...token }
@@ -121,63 +177,28 @@ const TokenBalances = () => {
   }
 
   const claimableTokens = tokens.filter((token) => token.balance > 0)
-  return (
-    <div>
-      <h1>Tokens</h1>
-      {fetchingTokens ? (
-        <p>fetching box tokens..</p>
-      ) : (
-        <div>
-          <h2>Box Tokens</h2>
-          <>
-            {tokens.map((tokenBalance) => {
-              const { token, balance, status } = tokenBalance
-              return (
-                <>
-                  <div key={token}>
-                    <span>{token}</span>: <span>{balance}</span>{' '}
-                    {balance > 0 && (
-                      <button
-                        onClick={() => handleApprove(tokenBalance)}
-                        disabled={status && status != 'initialized'}
-                      >
-                        {status == 'pending'
-                          ? 'pending approval'
-                          : status == 'approved'
-                          ? 'Approved'
-                          : 'Approve'}
-                      </button>
-                    )}
-                  </div>
-                </>
-              )
-            })}
+  const approvedTokens = tokens.filter((token) => token.status == 'approved')
 
-            {claimableTokens.length > 0 ? (
-              <button onClick={() => handleClaim()}>Claim</button>
-            ) : (
-              <p>no tokens to claim</p>
-            )}
-          </>
-        </div>
-      )}
-      {fetchingTokens ? (
-        <p>fetching gov tokens..</p>
-      ) : (
-        <div>
-          <h2>Gov Tokens</h2>
-          {govTokenBalances.length > 0 ? (
-            govTokenBalances.map((balance, idx) => (
-              <div key={idx}>
-                <span>{`gov_tier_${idx + 1}: `}</span> <span>{balance}</span>
-              </div>
-            ))
-          ) : (
-            <p>no gov tokens</p>
-          )}
-        </div>
-      )}
-    </div>
+  return (
+    <>
+      <ClaimArea
+        claimableTokens={claimableTokens}
+        approvedTokens={approvedTokens}
+        govTokenBalances={govTokenBalances}
+        handleClaim={handleClaim}
+      />
+      <button onClick={()=>supportSphere(parseUnits("1", 18))}>supportSphere</button>
+      <button onClick={approveAllTokens}>Approve all tokens</button>
+      <TokenTiles
+        address={address}
+        fetchingTokens={fetchingTokens}
+        reclaim={reclaim}
+        donate={donate}
+        tokens={tokens}
+        govTokenBalances={govTokenBalances}
+        handleApprove={handleApprove}
+      />
+    </>
   )
 }
 
