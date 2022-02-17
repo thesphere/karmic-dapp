@@ -1,4 +1,5 @@
 import Web3ContextProvider from '../context/Web3Context'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function MyApp({ Component, pageProps }) {
   return (
