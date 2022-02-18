@@ -1,0 +1,24 @@
+.bg-transparent {
+  background-color: transparent !important;
+}
+
+.rounded-purple-container {
+  border: 2px solid #a0a0ff;
+  box-sizing: border-box;
+  border-radius: 100px;
+  padding: 8.75px 20px;
+  color: #a0a0ff;
+}
+
+.sphere-action-Btn {
+  padding: 8.75px 20px;
+  background: #00ff00;
+  border: 2px solid #00ff00;
+  box-sizing: border-box;
+  border-radius: 100px;
+  color: #212529;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 26px;
+}
