@@ -64,7 +64,6 @@ export const Home = () => {
           <title>The Sphere</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Header />
         <TokenBalances />
       </div>
 
