@@ -1,3 +1,7 @@
 body{
     background: url('../../../public/Stars.png');
 }
+
+.text-center{
+    text-align: center;
+}

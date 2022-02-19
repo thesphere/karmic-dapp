@@ -1,0 +1,28 @@
+.cta-title {
+  font-family: 'Space Mono', monospace;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 35px;
+  line-height: 52px;
+  color: #ffffff;
+}
+
+.cta-description {
+  font-family: 'Space Grotesk', sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 26px;
+  color: #ffffff;
+  margin-top: 10px;
+}
+
+.cta-action{
+    margin-top: 20px;
+}
+
+.cta-deck{
+    display: flex;
+    margin-top: 145px;
+    margin-bottom: 193px;
+}

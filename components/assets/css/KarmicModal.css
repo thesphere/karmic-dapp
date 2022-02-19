@@ -1,0 +1,86 @@
+.karmic-modal-container {
+  background: #ffffff;
+  border: 3px solid #a0a0ff;
+  box-sizing: border-box;
+  border-radius: 18px;
+  padding: 37px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.karmic-modal-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 24px;
+
+  letter-spacing: 0.05px;
+
+  color: #000000;
+}
+
+.karmic-modal-description {
+  font-family: 'Space Grotesk', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 26px;
+  margin-bottom: 44px;
+  text-align: center;
+  color: #000000;
+}
+
+.karmic-modal-action {
+  border: 2px solid #a0a0ff;
+  box-sizing: border-box;
+  border-radius: 7px;
+  padding: 8.75px 20px;
+  width: 310px;
+  height: 33px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 26px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #212529;
+  margin: 0px 0px;
+  text-align: center;
+  background-color: transparent;
+  margin-bottom: 9px;
+}
+
+.karmic-modal-close {
+  font-family: 'Space Grotesk', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 26px;
+  color: #5d5fef;
+}
+
+.karmic-modal-action:hover {
+  color: #fff;
+  background-color: #5d5fef;
+  border-color: #fff;
+}
+
+.karmic-modal-action:active {
+  color: #fff !important;
+  background-color: #5d5fef !important;
+  border-color: #fff !important;
+}
+
+.karmic-modal-action:focus {
+  color: #fff !important;
+  background-color: #5d5fef !important;
+  border-color: #fff !important;
+}
+
+.karmic-modal-action:focus-visible {
+  border-color: #5d5fef !important;
+}
