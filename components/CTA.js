@@ -30,20 +30,22 @@ const CTA = ({
     handleClose: handleApproveClose,
   } = useModal(false)
 
-  const [supportValue, setSupportValue] = useState(0);
+  const [supportValue, setSupportValue] = useState(0)
 
-  const handleSupportValue = (e) => setSupportValue(e.target.value);
+  const handleSupportValue = (e) => setSupportValue(e.target.value)
 
   return (
     <div className="cta-deck">
       {claimableTokens.length > 0 ? (
         <>
-          {claimableTokens.length == approvedTokens.length && (<CTACard
-            title="Claim Governance Token"
-            description="Approve and claim all of the governance torkens from the crowdunds that met their funding target."
-            actionName="Claim All KARMIC tokens"
-            action={handleShowClaim}
-          />)}
+          {claimableTokens.length == approvedTokens.length && (
+            <CTACard
+              title="Claim Governance Token"
+              description="Approve and claim all of the governance torkens from the crowdunds that met their funding target."
+              actionName="Claim All KARMIC tokens"
+              action={handleShowClaim}
+            />
+          )}
           {claimableTokens.length != approvedTokens.length && (
             <CTACard
               title="Claim Governance Token"
@@ -53,11 +55,7 @@ const CTA = ({
             />
           )}
         </>
-      ) : govTokenBalances.find((balance) => balance > 0) ? (
-        null
-      ) : (
-        null
-      )}
+      ) : govTokenBalances.find((balance) => balance > 0) ? null : null}
       <CTACard
         title="Support Sphere"
         description="Support Sphere Commons Pool and receive KARMIC governance tokens to influence decision making in the DAO"
@@ -95,7 +93,7 @@ const CTA = ({
         actionProgressName={'Supporting...'}
         action={() => supportSphere(parseUnits(supportValue, 18))}
       >
-<SupportForm value={supportValue} setValue={handleSupportValue} />
+        <SupportForm value={supportValue} setValue={handleSupportValue} />
       </KarmicModal>
     </div>
   )

@@ -3,7 +3,7 @@ import { Form, Row, Col } from 'react-bootstrap'
 
 const SupportForm = ({value, setValue}) => {
   return (
-    <div>
+    <div className='support-form-container'>
       <Form.Group style={{justifyContent: 'space-between'}} as={Row} controlId="formPlaintextPassword">
         <Form.Label className='support-form-label' column sm="4">
         Send ETH
