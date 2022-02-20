@@ -63,24 +63,24 @@
   color: #5d5fef;
 }
 
-.karmic-modal-action:hover {
+.action-hover:hover {
   color: #fff;
   background-color: #5d5fef;
   border-color: #fff;
 }
 
-.karmic-modal-action:active {
+.action-hover:active {
   color: #fff !important;
   background-color: #5d5fef !important;
   border-color: #fff !important;
 }
 
-.karmic-modal-action:focus {
+.action-hover:focus {
   color: #fff !important;
   background-color: #5d5fef !important;
   border-color: #fff !important;
 }
 
-.karmic-modal-action:focus-visible {
+.action-hover:focus-visible {
   border-color: #5d5fef !important;
 }
