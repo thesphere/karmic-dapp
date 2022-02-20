@@ -37,7 +37,7 @@ const KarmicModal = ({
         {children}
         <div className="karmic-modal-body">
           <Button
-            className="karmic-modal-action"
+            className="karmic-modal-action action-hover"
             variant="primary"
             onClick={performAction}
           >
