@@ -51,7 +51,7 @@ const CTA = ({
       ) : govTokenBalances.find((balance) => balance > 0) ? (
         null
       ) : (
-        <p>no tokens to claim</p>
+        null
       )}
       <CTACard
         title="Support Sphere"
