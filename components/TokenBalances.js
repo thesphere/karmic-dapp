@@ -121,17 +121,17 @@ const TokenBalances = () => {
       })
     )
       .then(fetchTokenBalances)
-      .then(userBalance)
+      .then((tx)=>tx.wait().then(userBalance))
   }
 
   const supportSphere = async (amount) => {
-    ;(await web3Provider.getSigner())
+    (await web3Provider.getSigner())
       .sendTransaction({
         from: address,
         to: karmicInstance.address,
         value: amount,
       })
-      .then(userBalance)
+      .then((tx)=>tx.wait().then(userBalance))
   }
 
   const userBalance = async () => {
@@ -156,7 +156,7 @@ const TokenBalances = () => {
     karmicInstance
       .connect(signer)
       .claimGovernanceTokens([token])
-      .then(userBalance)
+      .then((tx)=>tx.wait().then(userBalance));
   }
 
   const reclaim = async (token) => {
@@ -170,7 +170,7 @@ const TokenBalances = () => {
     karmicInstance
       .connect(signer)
       .withdraw(token, amount)
-      .then(userBalance)
+      .then(tx=>tx.wait().then(userBalance))
   }
 
   const handleApprove = async (token) => {
