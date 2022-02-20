@@ -1,8 +1,5 @@
-import { ethers } from 'ethers'
 import { useEffect, useState, useContext } from 'react'
 import { Web3Context } from '../context/Web3Context'
-import karmicContract from '../contracts/Karmic.json'
-import erc20 from '../contracts/ERC20.json'
 import BoxCard from './BoxCard'
 
 const Tile = ({ props }) => {
