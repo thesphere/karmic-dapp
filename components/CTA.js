@@ -3,6 +3,7 @@ import useModal from './utils/useModal'
 import KarmicModal from './KarmicModal'
 import { parseUnits } from 'ethers/lib/utils'
 import { useEffect, useState } from 'react'
+import SupportForm from './SupportForm'
 
 const CTA = ({
   handleClaim,
@@ -28,6 +29,10 @@ const CTA = ({
     handleShow: handleApproveShow,
     handleClose: handleApproveClose,
   } = useModal(false)
+
+  const [supportValue, setSupportValue] = useState(0);
+
+  const handleSupportValue = (e) => setSupportValue(e.target.value);
 
   return (
     <div className="cta-deck">
@@ -88,8 +93,10 @@ const CTA = ({
         description={'Support Sphere with ETH and receive KARMIC Tokens'}
         actionName={'Send ETH to receive KARMIC'}
         actionProgressName={'Supporting...'}
-        action={() => supportSphere(parseUnits('0.2', 18))}
-      />
+        action={() => supportSphere(parseUnits(supportValue, 18))}
+      >
+<SupportForm value={supportValue} setValue={handleSupportValue} />
+      </KarmicModal>
     </div>
   )
 }

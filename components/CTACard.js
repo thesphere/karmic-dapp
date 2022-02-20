@@ -4,7 +4,7 @@ const CTACard = ({
   title = 'CTA Title',
   description = 'A good description for the CTA card',
   actionName = 'Test',
-  action,
+  action
 }) => {
   return (
     <div className="row text-center">

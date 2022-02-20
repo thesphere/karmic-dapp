@@ -1,0 +1,16 @@
+.support-form-label{
+    font-family: "Space Grotesk", sans-serif;
+font-style: normal;
+font-weight: bold;
+font-size: 15px;
+line-height: 24px;
+letter-spacing: 0.05px;
+color: #000000;
+}
+
+.support-form-input{
+    background: #FFFFFF;
+border: 1px solid #6B7280;
+box-sizing: border-box;
+border-radius: 8px;
+}
