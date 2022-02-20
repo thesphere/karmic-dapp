@@ -13,7 +13,7 @@ const Header = ({
   approvedTokens,
   govTokenBalances,
   ethBalance,
-  karmicBalance
+  karmicBalance,
 }) => {
   const { state } = useContext(Web3Context)
   const { address, chainId } = state

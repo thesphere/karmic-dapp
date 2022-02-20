@@ -98,7 +98,7 @@
 }
 
 .box-token-deck-title {
-  font-family: "Space Mono", monospace;
+  font-family: 'Space Mono', monospace;
   font-style: normal;
   font-weight: bold;
   font-size: 25px;
@@ -112,9 +112,9 @@
   margin: 30px 0px;
 }
 
-.box-token-container{
+.box-token-container {
   width: 328px !important;
-   height: 487px !important;
-    border: none;
-    margin: 0px 80px 60px 80px;
+  height: 487px !important;
+  border: none;
+  margin: 0px 80px 60px 80px;
 }

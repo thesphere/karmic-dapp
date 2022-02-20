@@ -17,7 +17,7 @@ const BoxCard = ({
   }
 
   const handleDonate = async () => {
-    await donate(token);
+    await donate(token)
   }
   return (
     <Card className="box-token-container">
@@ -32,10 +32,11 @@ const BoxCard = ({
           Status: {isTargetReached ? 'Target reached' : 'Target not reached'}
         </Card.Text>
         <>
-          {govTokenBalance == 0 && balance == 0 ? <p className="box-token-info">
-                You don't have any governance token.
-              </p> : govTokenBalance == 0 &&
-            balance > 0 ? (
+          {govTokenBalance == 0 && balance == 0 ? (
+            <p className="box-token-info">
+              You don't have any governance token.
+            </p>
+          ) : govTokenBalance == 0 && balance > 0 ? (
             status !== 'approved' ? (
               <p className="box-token-info">
                 In order to receive GOV, please approve all of your tokens first

@@ -14,7 +14,7 @@ const Tile = ({ props }) => {
     image,
     title,
     govTokenBalance,
-    isTargetReached
+    isTargetReached,
   } = props
 
   return (

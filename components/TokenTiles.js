@@ -12,7 +12,9 @@ const TokenTiles = (props) => {
   } = props
   return (
     <>
-      <h1 style={{marginTop: '0px'}} className="box-token-deck-title">Sphere Campaigns</h1>
+      <h1 style={{ marginTop: '0px' }} className="box-token-deck-title">
+        Sphere Campaigns
+      </h1>
       <div className="main-container">
         {address ? (
           fetchingTokens ? (
@@ -38,9 +40,9 @@ const TokenTiles = (props) => {
                       status,
                       title,
                       image,
-                      govTokenBalance: govTokenBalances[idx+1],
+                      govTokenBalance: govTokenBalances[idx + 1],
                       isTargetReached,
-                      handleApprove
+                      handleApprove,
                     }}
                     key={token}
                   />

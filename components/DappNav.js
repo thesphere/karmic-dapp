@@ -1,7 +1,7 @@
 import { Navbar } from 'react-bootstrap'
 import ConnectWallet from './ConnectWallet'
 
-const DappNav = ({ethBalance, karmicBalance}) => {
+const DappNav = ({ ethBalance, karmicBalance }) => {
   return (
     <Navbar className="bg-transparent" bg="dark" variant="dark">
       <Navbar.Brand className="justify-content-start" href="#home">
