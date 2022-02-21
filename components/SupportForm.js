@@ -35,7 +35,7 @@ const SupportForm = ({ value, setValue }) => {
             readOnly
             value={
               !(value === undefined || value === '')
-                ? `${value} KARMIC`
+                ? `${value*1000} KARMIC`
                 : '0 KARMIC'
             }
           />
