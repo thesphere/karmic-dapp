@@ -18,7 +18,7 @@ const TokenTiles = (props) => {
       <div className="main-container">
         {address ? (
           fetchingTokens ? (
-            <p>fetching box tokens..</p>
+            <p className='card-not-loaded-desc'>fetching box tokens..</p>
           ) : (
             <div className="tile-container">
               {tokens.map((tokenBalance, idx) => {
@@ -51,7 +51,7 @@ const TokenTiles = (props) => {
             </div>
           )
         ) : (
-          <p>connect wallet to see NFTs</p>
+          <p className='card-not-loaded-desc'>connect wallet to see NFTs</p>
         )}
       </div>
 
