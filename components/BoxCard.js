@@ -87,7 +87,7 @@ const BoxCard = ({
             </>
           )}
         </>
-        <a href={mirrorUrl} className="box-token-backlink" variant="link">
+        <a href={mirrorUrl} target="_blank" rel="noopener noreferrer" className="box-token-backlink" variant="link">
           Go to Mirror
         </a>
       </Card.Body>
