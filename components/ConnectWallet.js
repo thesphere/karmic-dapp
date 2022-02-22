@@ -29,7 +29,7 @@ const ConnectWallet = ({ ethBalance, karmicBalance }) => {
           </div>
         )
       ) : (
-        <Button action={connect} text={'Connect'} />
+        <Button action={connect} text={'Connect Wallet'} />
       )}
     </>
   )
