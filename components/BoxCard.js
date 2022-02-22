@@ -10,7 +10,7 @@ const BoxCard = ({
   balance,
   isTargetReached,
   token,
-  image = 'http://localhost:3000/cat.jpeg',
+  image = 'https://picsum.photos/200/300',
 }) => {
   const handleReclaim = async () => {
     reclaim(token)

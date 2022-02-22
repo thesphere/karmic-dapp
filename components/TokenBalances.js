@@ -59,7 +59,7 @@ const TokenBalances = () => {
             balance: isBoxToken ? ethers.utils.formatEther(balance) : balance,
             status,
             title: name,
-            image: 'http://localhost:3000/cat.jpeg',
+            image: 'https://picsum.photos/200/300',
             isTargetReached,
           }
         } catch (error) {
@@ -68,7 +68,7 @@ const TokenBalances = () => {
             balance: isBoxToken ? ethers.utils.formatEther(balance) : balance,
             status,
             title: name,
-            image: 'http://localhost:3000/cat.jpeg',
+            image: 'https://picsum.photos/200/300',
             isTargetReached,
           }
         }
