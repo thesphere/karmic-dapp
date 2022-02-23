@@ -38,10 +38,17 @@ const BoxCard = ({
             </p>
           ) : govTokenBalance == 0 && balance > 0 ? (
             status !== 'approved' ? (
-              <p className="box-token-info">
-                In order to receive GOV, please approve all of your tokens first
-                and then claim them.
-              </p>
+              isTargetReached ? (
+                <p className="box-token-info">
+                  In order to receive GOV, please approve all of your tokens
+                  first and then claim them.
+                </p>
+              ) : (
+                <p className="box-token-info">
+                  In order to reclaim or donate your ETH, please approve all of
+                  your tokens first.
+                </p>
+              )
             ) : isTargetReached ? (
               <p className="box-token-info">You can claim the KARMIC tokens.</p>
             ) : (
@@ -87,7 +94,13 @@ const BoxCard = ({
             </>
           )}
         </>
-        <a href={mirrorUrl} target="_blank" rel="noopener noreferrer" className="box-token-backlink" variant="link">
+        <a
+          href={mirrorUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="box-token-backlink"
+          variant="link"
+        >
           Go to Mirror
         </a>
       </Card.Body>
