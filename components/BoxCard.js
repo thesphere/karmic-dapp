@@ -66,7 +66,7 @@ const BoxCard = ({
                   variant="primary"
                   onClick={handleDonate}
                 >
-                  Donate ETH & Claim KARMIC tokens.
+                  Donate ETH & Claim KARMIC Tokens
                 </Button>
               </>
             )
