@@ -87,13 +87,9 @@
   font-weight: normal;
   font-size: 13px;
   line-height: 24px;
-  /* or 185% */
-
   text-align: center;
   letter-spacing: 0.05px;
-
-  /* Neutral/Black */
-
+  /* margin-bottom: 0px; */
   color: #000000;
 }
 
@@ -114,7 +110,17 @@
 
 .box-token-container {
   width: 328px !important;
-  height: 487px !important;
+  height: 520px !important;
   border: none;
   margin: 0px 80px 60px 80px;
+}
+
+.claimable-amount-info{
+  font-family: "Space Grotesk", sans-serif;
+font-style: normal;
+font-weight: bold;
+font-size: 14px;
+line-height: 24px;
+letter-spacing: 0.05px;
+color: #000000;
 }

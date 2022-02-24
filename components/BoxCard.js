@@ -1,3 +1,4 @@
+import { ethers } from 'ethers'
 import { Card, Button } from 'react-bootstrap'
 
 const BoxCard = ({
@@ -39,10 +40,18 @@ const BoxCard = ({
           ) : govTokenBalance == 0 && balance > 0 ? (
             status !== 'approved' ? (
               isTargetReached ? (
-                <p className="box-token-info">
-                  In order to receive GOV, please approve all of your tokens
-                  first and then claim them.
-                </p>
+                <>
+                  <div className="row justify-content-between pl-3 pr-3 pt-0 pb-0">
+                    <p className="claimable-amount-info">Claimable KARMIC</p>
+                    <p className="claimable-amount-info">
+                      {Number(balance)} KARMIC
+                    </p>
+                  </div>
+                  <p className="box-token-info">
+                    In order to receive KARMIC tokens, please approve your
+                    tokens first and then claim them.
+                  </p>
+                </>
               ) : (
                 <p className="box-token-info">
                   In order to reclaim or donate your ETH, please approve all of
@@ -50,7 +59,17 @@ const BoxCard = ({
                 </p>
               )
             ) : isTargetReached ? (
-              <p className="box-token-info">You can claim the KARMIC tokens.</p>
+              <>
+                <div className="row justify-content-between pl-3 pr-3 pt-0 pb-0">
+                  <p className="claimable-amount-info">Claimable KARMIC</p>
+                  <p className="claimable-amount-info">
+                    {Number(balance)} KARMIC
+                  </p>
+                </div>
+                <p className="box-token-info">
+                  You can claim your KARMIC Tokens.
+                </p>
+              </>
             ) : (
               <>
                 <Button
@@ -58,7 +77,7 @@ const BoxCard = ({
                   variant="primary"
                   onClick={handleReclaim}
                 >
-                  Reclaim ETH
+                  Reclaim {Number(balance) / 1000} ETH
                 </Button>
                 <Card.Text className="box-token-or">or</Card.Text>
                 <Button
