@@ -31,11 +31,12 @@ const SupportForm = ({ value, setValue }) => {
         </Form.Label>
         <Col sm="6">
           <Form.Control
+            className="support-form-disabled-input"
             plaintext
             readOnly
             value={
               !(value === undefined || value === '')
-                ? `${value*1000} KARMIC`
+                ? `${value * 1000} KARMIC`
                 : '0 KARMIC'
             }
           />

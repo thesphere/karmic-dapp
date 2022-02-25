@@ -3,8 +3,8 @@ import { Form, Row, Col } from 'react-bootstrap'
 
 const DonateForm = ({ title, balance }) => {
   return (
-    <div className="support-form-container" style={{textAlign: 'center'}}>
-        <h3 className='donate-form-title'>{title}</h3>
+    <div className="support-form-container" style={{ textAlign: 'center' }}>
+      <h3 className="donate-form-title">{title}</h3>
       <Form.Group
         style={{ justifyContent: 'space-between', textAlign: 'left' }}
         as={Row}
@@ -15,28 +15,30 @@ const DonateForm = ({ title, balance }) => {
         </Form.Label>
         <Col sm="6">
           <Form.Control
-          style={{textAlign: 'right'}}
+            className="support-form-disabled-input"
+            style={{ textAlign: 'right' }}
             plaintext
             readOnly
             value={
-                !(Number(balance) === undefined || Number(balance) === '')
-                  ? `${Number(balance)/1000} ETH`
-                  : '0 ETH'
-              }
+              !(Number(balance) === undefined || Number(balance) === '')
+                ? `${Number(balance) / 1000} ETH`
+                : '0 ETH'
+            }
           />
         </Col>
       </Form.Group>
       <Form.Group
-        style={{ justifyContent: 'space-between', textAlign: 'left'  }}
+        style={{ justifyContent: 'space-between', textAlign: 'left' }}
         as={Row}
         controlId="formPlaintextPassword"
       >
-        <Form.Label className="support-form-label" column sm="5">
+        <Form.Label className="support-form-label" column sm="6">
           Claim KARMIC Tokens
         </Form.Label>
         <Col sm="6">
           <Form.Control
-          style={{textAlign: 'right'}}
+            className="support-form-disabled-input"
+            style={{ textAlign: 'right' }}
             plaintext
             readOnly
             value={

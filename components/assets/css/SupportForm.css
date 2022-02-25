@@ -22,3 +22,11 @@
   box-sizing: border-box;
   border-radius: 8px;
 }
+
+.support-form-disabled-input:focus {
+  outline: none;
+}
+
+.support-form-disabled-input {
+  cursor: auto;
+}

@@ -133,7 +133,9 @@ const BoxCard = ({
         show={show}
         handleClose={handleClose}
         title={'Donate ETH'}
-        description={'Donate your ETH to Sphere Pool to receive KARMIC TOKENS'}
+        description={
+          'Donate your ETH to the Sphere Pool to receive KARMIC tokens'
+        }
         action={handleDonate}
         actionName={'Donate ETH & claim KARMIC Tokens'}
         actionProgressName={'Donating...'}
