@@ -4,6 +4,7 @@ import KarmicModal from './KarmicModal'
 import { parseUnits } from 'ethers/lib/utils'
 import { useEffect, useState } from 'react'
 import SupportForm from './SupportForm'
+import ClaimInfo from './ClaimInfo'
 
 const CTA = ({
   handleClaim,
@@ -72,7 +73,9 @@ const CTA = ({
         actionName={'Claim Tokens'}
         actionProgressName={'Claiming...'}
         action={handleClaim}
-      />
+      >
+        <ClaimInfo tokens={tokens} />
+      </KarmicModal>
       <KarmicModal
         show={showApprove}
         handleClose={handleApproveClose}
