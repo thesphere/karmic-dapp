@@ -113,17 +113,19 @@ const TokenBalances = () => {
       (token) => token.token != '0x0000000000000000000000000000000000000000'
     )
 
-    tokensCopy.reduce((previousApprove, tokenCopy) => {
-      return previousApprove.then(() => {
-        console.log('Approving token ', tokenCopy.token)
-        return handleApprove(tokenCopy)
-      }).catch(() => {
-        console.log("Approving previous token failed");
-        console.log('Approving token ', tokenCopy.token)
-        return handleApprove(tokenCopy)})
+    tokensCopy.reduce((previousApprove, tokenCopy, index) => {
+      return previousApprove
+        .then(() => {
+          console.log(index)
+          userBalance().then(fetchTokenBalances)
+          console.log('Approving token ', tokenCopy.token)
+          return handleApprove(tokenCopy)
+        })
+        .catch((error) => {
+          console.log('Approving previous token failed')
+          return Promise.resolve()
+        })
     }, Promise.resolve())
-    await userBalance()
-    await fetchTokenBalances()
   }
 
   const supportSphere = async (amount) => {
