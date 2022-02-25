@@ -75,7 +75,9 @@ const TokenBalances = () => {
       })
     )
 
-    boxTokens = boxTokens.filter(box=>box.token !== ethers.constants.AddressZero);
+    boxTokens = boxTokens.filter(
+      (box) => box.token !== ethers.constants.AddressZero
+    )
 
     const govTokenBalances = (await karmicInstance.allBalancesOf(address)).map(
       (balance) => ethers.utils.formatEther(balance)
@@ -110,20 +112,22 @@ const TokenBalances = () => {
     const tokensCopy = tokens.filter(
       (token) => token.token != '0x0000000000000000000000000000000000000000'
     )
-    Promise.all(
-      tokensCopy.map(async (token) => {
-        if (parseFloat(token.balance) > 0 && token.status !== 'approved') {
-          console.log('Approving token ', token.token)
-          return await handleApprove(token)
-        }
-      })
-    )
-    .then(userBalance)
-      .then(fetchTokenBalances)
+
+    tokensCopy.reduce((previousApprove, tokenCopy) => {
+      return previousApprove.then(() => {
+        console.log('Approving token ', tokenCopy.token)
+        return handleApprove(tokenCopy)
+      }).catch(() => {
+        console.log("Approving previous token failed");
+        console.log('Approving token ', tokenCopy.token)
+        return handleApprove(tokenCopy)})
+    }, Promise.resolve())
+    await userBalance()
+    await fetchTokenBalances()
   }
 
   const supportSphere = async (amount) => {
-    (await web3Provider.getSigner())
+    ;(await web3Provider.getSigner())
       .sendTransaction({
         from: address,
         to: karmicInstance.address,
@@ -153,9 +157,9 @@ const TokenBalances = () => {
     const signer = await web3Provider.getSigner(address)
     const tokenInstance = new ethers.Contract(token, erc20.abi, web3Provider)
     const amount = await tokenInstance.balanceOf(address)
-    if(amount.eq(0)){
-      alert("No tokens remaining to donate");
-      return;
+    if (amount.eq(0)) {
+      alert('No tokens remaining to donate')
+      return
     }
     karmicInstance
       .connect(signer)
@@ -167,9 +171,9 @@ const TokenBalances = () => {
     const signer = await web3Provider.getSigner(address)
     const tokenInstance = new ethers.Contract(token, erc20.abi, web3Provider)
     const amount = await tokenInstance.balanceOf(address)
-    if(amount.eq(0)){
-      alert("Nothing remaining to withdraw");
-      return;
+    if (amount.eq(0)) {
+      alert('Nothing remaining to withdraw')
+      return
     }
     karmicInstance
       .connect(signer)
