@@ -81,7 +81,7 @@ const CTA = ({
         handleClose={handleApproveClose}
         title={'Approve Box tokens'}
         description={
-          'Approve and claim your KARMIC tokens from the crowdunds that met their funding target.'
+          'Approve and claim your KARMIC tokens from the crowdfunds that met their funding target. This will require multiple Metamask confirmations.'
         }
         actionName={'Aprove'}
         actionProgressName={'Approving...'}
