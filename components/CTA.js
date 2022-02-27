@@ -94,7 +94,9 @@ const CTA = ({
         description={'Support Sphere with ETH and receive KARMIC Tokens'}
         actionName={'Send ETH to receive KARMIC'}
         actionProgressName={'Supporting...'}
-        action={() => supportSphere(parseUnits(supportValue, 18))}
+        action={(setInProgress) =>
+          supportSphere(parseUnits(supportValue, 18), setInProgress)
+        }
       >
         <SupportForm value={supportValue} setValue={handleSupportValue} />
       </KarmicModal>

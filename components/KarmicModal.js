@@ -15,12 +15,9 @@ const KarmicModal = ({
 
   const performAction = async () => {
     try {
-      setInProgress(true)
-      await action()
-      setInProgress(false)
+      action(setInProgress)
     } catch (error) {
       console.error(error)
-      setInProgress(false)
     }
   }
   return (

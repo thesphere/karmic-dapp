@@ -107,7 +107,8 @@ const TokenBalances = () => {
     }
   }, [web3Provider, address])
 
-  const approveAllTokens = async () => {
+  const approveAllTokens = async (setInProgress) => {
+    setInProgress(true)
     console.log('Approving all the tokens')
     const tokensCopy = tokens.filter(
       (token) => token.token != '0x0000000000000000000000000000000000000000'
@@ -125,16 +126,22 @@ const TokenBalances = () => {
           return Promise.resolve()
         })
     }, Promise.resolve())
+    setInProgress(false)
   }
 
-  const supportSphere = async (amount) => {
+  const supportSphere = async (amount, setInProgress) => {
+    setInProgress(true)
     ;(await web3Provider.getSigner())
       .sendTransaction({
         from: address,
         to: karmicInstance.address,
         value: amount,
       })
-      .then((tx) => tx.wait().then(userBalance))
+      .then((tx) => {
+        tx.wait().then(userBalance)
+        setInProgress(false)
+      })
+      .catch(() => setInProgress(false))
   }
 
   const userBalance = async () => {
@@ -154,7 +161,8 @@ const TokenBalances = () => {
     }
   }
 
-  const donate = async (token) => {
+  const donate = async (token, setInProgress) => {
+    setInProgress(true)
     const signer = await web3Provider.getSigner(address)
     const tokenInstance = new ethers.Contract(token, erc20.abi, web3Provider)
     const amount = await tokenInstance.balanceOf(address)
@@ -165,10 +173,15 @@ const TokenBalances = () => {
     karmicInstance
       .connect(signer)
       .claimGovernanceTokens([token])
-      .then((tx) => tx.wait().then(userBalance))
+      .then((tx) => {
+        tx.wait().then(userBalance)
+        setInProgress(false)
+      })
+      .catch(() => setInProgress(false))
   }
 
-  const reclaim = async (token) => {
+  const reclaim = async (token, setInProgress) => {
+    setInProgress(true)
     const signer = await web3Provider.getSigner(address)
     const tokenInstance = new ethers.Contract(token, erc20.abi, web3Provider)
     const amount = await tokenInstance.balanceOf(address)
@@ -179,7 +192,11 @@ const TokenBalances = () => {
     karmicInstance
       .connect(signer)
       .withdraw(token, amount)
-      .then((tx) => tx.wait().then(userBalance))
+      .then((tx) => {
+        tx.wait().then(userBalance)
+        setInProgress(false)
+      })
+      .catch(() => setInProgress(false))
   }
 
   const handleApprove = async (token) => {
@@ -205,11 +222,14 @@ const TokenBalances = () => {
         tokensCopy[idx] = tokenCopy
 
         setTokens(tokensCopy)
-      }).then(userBalance).then(fetchTokenBalances)
+      })
+      .then(userBalance)
+      .then(fetchTokenBalances)
       .catch((e) => console.log(e))
   }
 
-  const handleClaim = async () => {
+  const handleClaim = async (setInProgress) => {
+    setInProgress(true)
     const signer = await web3Provider.getSigner(address)
     const karmicInstance = new ethers.Contract(
       karmicContract.address,
@@ -217,7 +237,7 @@ const TokenBalances = () => {
       signer
     )
     const tokenAddresses = tokens
-      .filter((token) => token.balance > 0 && token.isTargetReached )
+      .filter((token) => token.balance > 0 && token.isTargetReached)
       .map((token) => token.token)
 
     const tx = await karmicInstance.claimGovernanceTokens(tokenAddresses)
@@ -241,6 +261,7 @@ const TokenBalances = () => {
         setGovTokenBalances(govTokenBalances)
       })
       .catch((e) => console.log(e))
+    setInProgress(false)
   }
 
   const claimableTokens = tokens.filter((token) => token.balance > 0)

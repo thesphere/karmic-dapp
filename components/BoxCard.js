@@ -3,6 +3,7 @@ import { Card, Button } from 'react-bootstrap'
 import DonateForm from './DonateForm'
 import KarmicModal from './KarmicModal'
 import useModal from './utils/useModal'
+import { useState } from 'react'
 
 const BoxCard = ({
   title = 'Box Token Name',
@@ -17,12 +18,13 @@ const BoxCard = ({
   image = 'https://picsum.photos/200/300',
 }) => {
   const { show, handleShow, handleClose } = useModal(false)
+  const [reclaimInProgress, setReclaimInProgress] = useState(false)
   const handleReclaim = () => {
-    return reclaim(token)
+    reclaim(token, setReclaimInProgress)
   }
 
-  const handleDonate = () => {
-    return donate(token)
+  const handleDonate = (setInProgress) => {
+    donate(token, setInProgress)
   }
   return (
     <>
@@ -80,9 +82,11 @@ const BoxCard = ({
                   <Button
                     className="box-token-button action-hover"
                     variant="primary"
-                    onClick={handleReclaim}
+                    onClick={() => handleReclaim(setReclaimInProgress)}
                   >
-                    Reclaim {Number(balance) / 1000} ETH
+                    {reclaimInProgress
+                      ? `Reclaiming...`
+                      : `Reclaim ${Number(balance) / 1000} ETH`}
                   </Button>
                   <Card.Text className="box-token-or">or</Card.Text>
                   <Button
@@ -103,9 +107,11 @@ const BoxCard = ({
                 <Button
                   className="box-token-button action-hover"
                   variant="primary"
-                  onClick={handleReclaim}
+                  onClick={() => handleReclaim(setReclaimInProgress)}
                 >
-                  Reclaim ETH
+                  {reclaimInProgress
+                    ? `Reclaiming...`
+                    : `Reclaim ${Number(balance) / 1000} ETH`}
                 </Button>
                 <Card.Text className="box-token-or">or</Card.Text>
                 <Button
