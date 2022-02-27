@@ -44,14 +44,15 @@ const TokenBalances = () => {
           )
         }
         const boxToken = await karmicInstance.boxTokenTiers(token)
-        const metadata = await karmicInstance.uri(boxToken.id)
+        const metadataUrl = await karmicInstance.uri(boxToken.id)
+        const data = (await axios.get(metadataUrl)).data.image;
+        const image = data.slice(0,4) === 'ipfs' ? `https://ipfs.io/ipfs/${data.slice(7)}` : data;
         const fees = await karmicInstance.fee()
         const fee_precision = await karmicInstance.FEE_PRECISION()
         const totalFunding = boxToken.funds
           .mul(fee_precision)
           .div(fee_precision.sub(fees))
         const isTargetReached = totalFunding.gte(boxToken.threshold)
-
         const status = isKarmicApproved > 0 ? 'approved' : null
         try {
           return {
@@ -59,7 +60,7 @@ const TokenBalances = () => {
             balance: isBoxToken ? ethers.utils.formatEther(balance) : balance,
             status,
             title: name,
-            image: 'https://picsum.photos/200/300',
+            image: image,
             isTargetReached,
           }
         } catch (error) {
@@ -68,7 +69,7 @@ const TokenBalances = () => {
             balance: isBoxToken ? ethers.utils.formatEther(balance) : balance,
             status,
             title: name,
-            image: 'https://picsum.photos/200/300',
+            image: image,
             isTargetReached,
           }
         }
