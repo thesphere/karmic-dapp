@@ -117,7 +117,6 @@ const TokenBalances = () => {
       return previousApprove
         .then(() => {
           console.log(index)
-          userBalance().then(fetchTokenBalances)
           console.log('Approving token ', tokenCopy.token)
           return handleApprove(tokenCopy)
         })
@@ -206,7 +205,7 @@ const TokenBalances = () => {
         tokensCopy[idx] = tokenCopy
 
         setTokens(tokensCopy)
-      })
+      }).then(userBalance).then(fetchTokenBalances)
       .catch((e) => console.log(e))
   }
 
@@ -218,7 +217,7 @@ const TokenBalances = () => {
       signer
     )
     const tokenAddresses = tokens
-      .filter((token) => token.balance > 0)
+      .filter((token) => token.balance > 0 && token.isTargetReached )
       .map((token) => token.token)
 
     const tx = await karmicInstance.claimGovernanceTokens(tokenAddresses)

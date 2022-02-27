@@ -4,10 +4,11 @@ import { Form, Row, Col } from 'react-bootstrap'
 const ClaimInfo = ({ tokens }) => {
 
     const totalClaimable = () => {
-        return tokens?.reduce((prevValue, token)=>prevValue+Number(token?.balance), 0);
+        return (tokens.filter(token=>token?.isTargetReached && token.balance > 0))?.reduce((prevValue, token)=>prevValue+Number(token?.balance), 0);
     }
     const renderClaimTokenInfo = () => {
-        return tokens?.map(token=>{
+      const filteredToken = tokens.filter(token=>token?.isTargetReached && token.balance > 0);
+        return filteredToken?.map(token=>{
              return <Form.Group
         style={{ justifyContent: 'space-between' }}
         as={Row}
