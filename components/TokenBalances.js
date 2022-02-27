@@ -112,7 +112,7 @@ const TokenBalances = () => {
     setInProgress(true)
     console.log('Approving all the tokens')
     const tokensCopy = tokens.filter(
-      (token) => token.token != '0x0000000000000000000000000000000000000000'
+      (token) => token.token != '0x0000000000000000000000000000000000000000' && Number(balance) > 0
     )
 
     tokensCopy.reduce((previousApprove, tokenCopy, index) => {
