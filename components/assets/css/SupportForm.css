@@ -1,0 +1,32 @@
+.support-form-container {
+  border: 2px solid #a0a0ff;
+  box-sizing: border-box;
+  border-radius: 19px;
+  padding: 40px 15px;
+  margin-bottom: 33px;
+}
+
+.support-form-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 24px;
+  letter-spacing: 0.05px;
+  color: #000000;
+}
+
+.support-form-input {
+  background: #ffffff;
+  border: 1px solid #6b7280;
+  box-sizing: border-box;
+  border-radius: 8px;
+}
+
+.support-form-disabled-input:focus {
+  outline: none;
+}
+
+.support-form-disabled-input {
+  cursor: auto;
+}

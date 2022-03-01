@@ -1,12 +1,12 @@
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { useEffect, useState, useContext } from 'react'
-import ClaimArea from './ClaimArea'
 import { Web3Context } from '../context/Web3Context'
 import karmicContract from '../contracts/Karmic.json'
 import erc20 from '../contracts/ERC20.json'
 import TokenTiles from './TokenTiles'
 import { parseUnits } from 'ethers/lib/utils'
 import Header from './Header'
+import axios from 'axios'
 
 const TokenBalances = () => {
   const [fetchingTokens, setFetchingTokens] = useState(true)
@@ -14,19 +14,20 @@ const TokenBalances = () => {
   // [address, balance, status, name, image]
   const [tokens, setTokens] = useState([])
   const [govTokenBalances, setGovTokenBalances] = useState([])
+  const [ethBalance, setEthBalance] = useState()
+  const [karmicBalance, setKarmicBalance] = useState()
   const { state } = useContext(Web3Context)
   const { web3Provider, address } = state
 
   const fetchTokenBalances = async () => {
-    console.log(web3Provider)
     const boxTokenAddresses = await karmicInstance.getBoxTokens()
 
-    const boxTokens = await Promise.all(
+    let boxTokens = await Promise.all(
       boxTokenAddresses.map(async (token) => {
-        const isBoxToken =
-          token != '0x0000000000000000000000000000000000000000'
+        const isBoxToken = token != '0x0000000000000000000000000000000000000000'
         let balance = ethers.BigNumber.from(0),
           isKarmicApproved = ethers.BigNumber.from(0)
+        let name
         if (isBoxToken) {
           console.log('no error')
           const tokenInstance = new ethers.Contract(
@@ -34,9 +35,8 @@ const TokenBalances = () => {
             erc20.abi,
             web3Provider
           )
-          console.log(tokenInstance)
+          name = await tokenInstance.name()
           balance = await tokenInstance.balanceOf(state.address)
-          console.log('Error')
 
           isKarmicApproved = await tokenInstance.allowance(
             address,
@@ -44,33 +44,69 @@ const TokenBalances = () => {
           )
         }
         const boxToken = await karmicInstance.boxTokenTiers(token)
-        const metadata = await karmicInstance.uri(boxToken.id)
-
-        // TODO: fetch metadata (e.g. with axios)
-        // const { title, image } = metadata
-        const title = 'evil cat'
-        const image = 'http://localhost:3000/cat.jpg'
-
+        const metadataUrl = await karmicInstance.uri(boxToken.id)
+        let image
+        if (isBoxToken) {
+          const targetUrl =
+            metadataUrl.slice(0, 4) === 'ipfs'
+              ? `https://ipfs.io/ipfs/${metadataUrl.slice(7)}`
+              : metadataUrl
+          const data = (await axios.get(targetUrl)).data.image
+          image =
+            data.slice(0, 4) === 'ipfs'
+              ? `https://ipfs.io/ipfs/${data.slice(7)}`
+              : data
+        } else {
+          image =
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Sphere_-_monochrome_simple.svg/1200px-Sphere_-_monochrome_simple.svg.png'
+        }
+        const fees = await karmicInstance.fee()
+        const fee_precision = await karmicInstance.FEE_PRECISION()
+        const totalFunding = boxToken.funds
+          .mul(fee_precision)
+          .div(fee_precision.sub(fees))
+        const isTargetReached = totalFunding.gte(boxToken.threshold)
         const status = isKarmicApproved > 0 ? 'approved' : null
-
-        return {
-          token,
-          balance: isBoxToken ? ethers.utils.formatEther(balance) : balance,
-          status,
-          title,
-          image,
+        try {
+          return {
+            token,
+            balance: isBoxToken ? ethers.utils.formatEther(balance) : balance,
+            status,
+            title: name,
+            image: image,
+            isTargetReached,
+          }
+        } catch (error) {
+          return {
+            token,
+            balance: isBoxToken ? ethers.utils.formatEther(balance) : balance,
+            status,
+            title: name,
+            image: image,
+            isTargetReached,
+          }
         }
       })
     )
 
-    const govTokenBalances = (
-      await karmicInstance.allBalancesOf(address)
-    ).map((balance) => ethers.utils.formatEther(balance))
+    boxTokens = boxTokens.filter(
+      (box) => box.token !== ethers.constants.AddressZero
+    )
+
+    const govTokenBalances = (await karmicInstance.allBalancesOf(address)).map(
+      (balance) => ethers.utils.formatEther(balance)
+    )
 
     setTokens(boxTokens)
     setGovTokenBalances(govTokenBalances)
     setFetchingTokens(false)
   }
+
+  useEffect(() => {
+    if (web3Provider && karmicInstance?.address && address) {
+      userBalance()
+    }
+  }, [web3Provider, address, fetchingTokens])
 
   useEffect(() => {
     const karmicInstance = new ethers.Contract(
@@ -85,40 +121,98 @@ const TokenBalances = () => {
     }
   }, [web3Provider, address])
 
-  const approveAllTokens = async () => {
+  const approveAllTokens = async (setInProgress) => {
+    setInProgress(true)
     console.log('Approving all the tokens')
     const tokensCopy = tokens.filter(
-      (token) => token.token != '0x0000000000000000000000000000000000000000'
+      (token) =>
+        token.token != '0x0000000000000000000000000000000000000000' &&
+        Number(token.balance) > 0
     )
-    Promise.all(tokensCopy.map(async (token) => {
-      if (parseFloat(token.balance) > 0 && token.status !== 'approved') {
-        console.log('Approving token ', token.token)
-        return await handleApprove(token)
-      }
-    })).then(fetchTokenBalances);
+
+    tokensCopy.reduce((previousApprove, tokenCopy, index) => {
+      return previousApprove
+        .then(() => {
+          console.log(index)
+          console.log('Approving token ', tokenCopy.token)
+          return handleApprove(tokenCopy)
+        })
+        .catch((error) => {
+          console.log('Approving previous token failed')
+          return Promise.resolve()
+        })
+    }, Promise.resolve())
+    setInProgress(false)
   }
 
-  const supportSphere = async (amount) => {
-    await (
-      await web3Provider.getSigner()
-    ).sendTransaction({
-      from: address,
-      to: karmicInstance.address,
-      value: amount,
-    })
+  const supportSphere = async (amount, setInProgress) => {
+    setInProgress(true)
+    ;(await web3Provider.getSigner())
+      .sendTransaction({
+        from: address,
+        to: karmicInstance.address,
+        value: amount,
+      })
+      .then((tx) => {
+        tx.wait().then(userBalance)
+        setInProgress(false)
+      })
+      .catch(() => setInProgress(false))
   }
 
-  const donate = async (token) => {
+  const userBalance = async () => {
+    try {
+      const userBalances = await karmicInstance?.allBalancesOf(address)
+      const totalBalance = userBalances?.reduce(
+        (prev, balance) => prev.add(balance),
+        BigNumber.from(0)
+      )
+      const ethBalance = await web3Provider.getBalance(address)
+      setEthBalance(ethBalance)
+      setKarmicBalance(totalBalance)
+    } catch (error) {
+      setEthBalance(BigNumber.from(0))
+      setKarmicBalance(BigNumber.from(0))
+      console.error(error)
+    }
+  }
+
+  const donate = async (token, setInProgress) => {
+    setInProgress(true)
     const signer = await web3Provider.getSigner(address)
-    await karmicInstance.connect(signer).claimGovernanceTokens([token])
-  }
-
-  const reclaim = async (token, amount) => {
-    const signer = await web3Provider.getSigner(address)
-    const amountToWithdraw = parseUnits(amount, 18)
-    await karmicInstance
+    const tokenInstance = new ethers.Contract(token, erc20.abi, web3Provider)
+    const amount = await tokenInstance.balanceOf(address)
+    if (amount.eq(0)) {
+      alert('No tokens remaining to donate')
+      return
+    }
+    karmicInstance
       .connect(signer)
-      .withdraw(token, amountToWithdraw.toString())
+      .claimGovernanceTokens([token])
+      .then((tx) => {
+        tx.wait().then(userBalance)
+        setInProgress(false)
+      })
+      .catch(() => setInProgress(false))
+  }
+
+  const reclaim = async (token, setInProgress) => {
+    setInProgress(true)
+    const signer = await web3Provider.getSigner(address)
+    const tokenInstance = new ethers.Contract(token, erc20.abi, web3Provider)
+    const amount = await tokenInstance.balanceOf(address)
+    if (amount.eq(0)) {
+      alert('Nothing remaining to withdraw')
+      return
+    }
+    karmicInstance
+      .connect(signer)
+      .withdraw(token, amount)
+      .then((tx) => {
+        tx.wait().then(userBalance)
+        setInProgress(false)
+      })
+      .catch(() => setInProgress(false))
   }
 
   const handleApprove = async (token) => {
@@ -145,10 +239,13 @@ const TokenBalances = () => {
 
         setTokens(tokensCopy)
       })
+      .then(userBalance)
+      .then(fetchTokenBalances)
       .catch((e) => console.log(e))
   }
 
-  const handleClaim = async () => {
+  const handleClaim = async (setInProgress) => {
+    setInProgress(true)
     const signer = await web3Provider.getSigner(address)
     const karmicInstance = new ethers.Contract(
       karmicContract.address,
@@ -156,7 +253,7 @@ const TokenBalances = () => {
       signer
     )
     const tokenAddresses = tokens
-      .filter((token) => token.balance > 0)
+      .filter((token) => Number(token.balance) > 0 && token.isTargetReached)
       .map((token) => token.token)
 
     const tx = await karmicInstance.claimGovernanceTokens(tokenAddresses)
@@ -166,6 +263,7 @@ const TokenBalances = () => {
 
     tx.wait()
       .then(async () => {
+        userBalance()
         const govTokenBalances = (
           await karmicInstance.allBalancesOf(address)
         ).map((balance) => ethers.utils.formatEther(balance))
@@ -179,6 +277,7 @@ const TokenBalances = () => {
         setGovTokenBalances(govTokenBalances)
       })
       .catch((e) => console.log(e))
+    setInProgress(false)
   }
 
   const claimableTokens = tokens.filter((token) => token.balance > 0)
@@ -186,14 +285,16 @@ const TokenBalances = () => {
 
   return (
     <>
-      <Header 
-      handleClaim={handleClaim}
-      approveAllTokens={approveAllTokens}
-      supportSphere={supportSphere}
-      claimableTokens={claimableTokens}
-      approvedTokens={approvedTokens}
-      govTokenBalances={govTokenBalances}
-      tokens={tokens}
+      <Header
+        handleClaim={handleClaim}
+        approveAllTokens={approveAllTokens}
+        supportSphere={supportSphere}
+        claimableTokens={claimableTokens}
+        approvedTokens={approvedTokens}
+        govTokenBalances={govTokenBalances}
+        tokens={tokens}
+        ethBalance={ethBalance}
+        karmicBalance={karmicBalance}
       />
       <TokenTiles
         address={address}

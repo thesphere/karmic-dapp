@@ -2,9 +2,9 @@
   font-family: 'Space Mono', monospace;
   font-style: normal;
   font-weight: bold;
-  font-size: 35px;
+  font-size: 25px;
   line-height: 52px;
-  color: #ffffff;
+  color: #A0A0FF;
 }
 
 .cta-description {
@@ -13,16 +13,16 @@
   font-weight: bold;
   font-size: 18px;
   line-height: 26px;
-  color: #ffffff;
+  color: #A0A0FF;
   margin-top: 10px;
 }
 
-.cta-action{
-    margin-top: 20px;
+.cta-action {
+  margin-top: 20px;
 }
 
-.cta-deck{
-    display: flex;
-    margin-top: 145px;
-    margin-bottom: 193px;
+.cta-deck {
+  display: flex;
+  margin-top: 145px;
+  margin-bottom: 120px;
 }

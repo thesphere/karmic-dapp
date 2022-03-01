@@ -1,19 +1,27 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { Web3Context } from '../context/Web3Context'
 import { ellipseAddress, getChainData } from '../lib/utilities'
 import CTA from './CTA'
 import DappNav from './DappNav'
 
-const Header = ({ handleClaim, approveAllTokens, supportSphere, tokens,  claimableTokens,
+const Header = ({
+  handleClaim,
+  approveAllTokens,
+  supportSphere,
+  tokens,
+  claimableTokens,
   approvedTokens,
-  govTokenBalances}) => {
+  govTokenBalances,
+  ethBalance,
+  karmicBalance,
+}) => {
   const { state } = useContext(Web3Context)
   const { address, chainId } = state
   const chainData = getChainData(chainId)
 
   return (
     <>
-      <DappNav />
+      <DappNav ethBalance={ethBalance} karmicBalance={karmicBalance} />
       <CTA
         handleClaim={handleClaim}
         approveAllTokens={approveAllTokens}

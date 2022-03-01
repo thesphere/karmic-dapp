@@ -1,18 +1,35 @@
 import Tile from './Tile'
 
 const TokenTiles = (props) => {
-  const { address, fetchingTokens, tokens, govTokenBalances, handleApprove, reclaim, donate } =
-    props
+  const {
+    address,
+    fetchingTokens,
+    tokens,
+    govTokenBalances,
+    handleApprove,
+    reclaim,
+    donate,
+  } = props
   return (
     <>
+      <h1 style={{ marginTop: '0px' }} className="box-token-deck-title">
+        Sphere Campaigns
+      </h1>
       <div className="main-container">
         {address ? (
           fetchingTokens ? (
-            <p>fetching box tokens..</p>
+            <p className='card-not-loaded-desc'>fetching box tokens..</p>
           ) : (
             <div className="tile-container">
               {tokens.map((tokenBalance, idx) => {
-                const { token, balance, status, title, image } = tokenBalance
+                const {
+                  token,
+                  balance,
+                  status,
+                  title,
+                  image,
+                  isTargetReached,
+                } = tokenBalance
                 return (
                   <Tile
                     props={{
@@ -23,7 +40,8 @@ const TokenTiles = (props) => {
                       status,
                       title,
                       image,
-                      govTokenBalance: govTokenBalances[idx],
+                      govTokenBalance: govTokenBalances[idx + 1],
+                      isTargetReached,
                       handleApprove,
                     }}
                     key={token}
@@ -33,7 +51,7 @@ const TokenTiles = (props) => {
             </div>
           )
         ) : (
-          <p>connect wallet to see NFTs</p>
+          <p className='card-not-loaded-desc'>connect wallet to see NFTs</p>
         )}
       </div>
 
