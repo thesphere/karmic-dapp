@@ -10,7 +10,7 @@ const ClaimInfo = ({ tokens }) => {
   const renderClaimTokenInfo = () => {
     const filteredToken = tokens.filter(
       (token) => token?.isTargetReached && token.balance > 0
-    )
+    ) 
     return filteredToken?.map((token) => {
       return (
         <Form.Group
