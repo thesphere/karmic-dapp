@@ -45,15 +45,21 @@ const TokenBalances = () => {
         }
         const boxToken = await karmicInstance.boxTokenTiers(token)
         const metadataUrl = await karmicInstance.uri(boxToken.id)
-        const targetUrl =
-          metadataUrl.slice(0, 4) === 'ipfs'
-            ? `https://ipfs.io/ipfs/${metadataUrl.slice(7)}`
-            : metadataUrl
-        const data = (await axios.get(targetUrl)).data.image
-        const image =
-          data.slice(0, 4) === 'ipfs'
-            ? `https://ipfs.io/ipfs/${data.slice(7)}`
-            : data
+        let image
+        if (isBoxToken) {
+          const targetUrl =
+            metadataUrl.slice(0, 4) === 'ipfs'
+              ? `https://ipfs.io/ipfs/${metadataUrl.slice(7)}`
+              : metadataUrl
+          const data = (await axios.get(targetUrl)).data.image
+          image =
+            data.slice(0, 4) === 'ipfs'
+              ? `https://ipfs.io/ipfs/${data.slice(7)}`
+              : data
+        } else {
+          image =
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Sphere_-_monochrome_simple.svg/1200px-Sphere_-_monochrome_simple.svg.png'
+        }
         const fees = await karmicInstance.fee()
         const fee_precision = await karmicInstance.FEE_PRECISION()
         const totalFunding = boxToken.funds
