@@ -45,7 +45,11 @@ const TokenBalances = () => {
         }
         const boxToken = await karmicInstance.boxTokenTiers(token)
         const metadataUrl = await karmicInstance.uri(boxToken.id)
-        const data = (await axios.get(metadataUrl)).data.image
+        const targetUrl =
+          metadataUrl.slice(0, 4) === 'ipfs'
+            ? `https://ipfs.io/ipfs/${metadataUrl.slice(7)}`
+            : metadataUrl
+        const data = (await axios.get(targetUrl)).data.image
         const image =
           data.slice(0, 4) === 'ipfs'
             ? `https://ipfs.io/ipfs/${data.slice(7)}`
