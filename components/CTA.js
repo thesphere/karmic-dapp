@@ -39,14 +39,17 @@ const CTA = ({
     <div className="cta-deck">
       {claimableTokens.length > 0 ? (
         <>
-          {claimableTokens.length == approvedTokens.length && (
-            <CTACard
-              title="Claim Governance Token"
-              description="Approve and claim all of the governance torkens from the crowdunds that met their funding target."
-              actionName="Claim All KARMIC tokens"
-              action={handleShowClaim}
-            />
-          )}
+          {claimableTokens.length == approvedTokens.length &&
+            tokens.filter(
+              (token) => Number(token.balance) > 0 && token.isTargetReached
+            ).length > 0 && (
+              <CTACard
+                title="Claim Governance Token"
+                description="Approve and claim all of the governance torkens from the crowdunds that met their funding target."
+                actionName="Claim All KARMIC tokens"
+                action={handleShowClaim}
+              />
+            )}
           {claimableTokens.length != approvedTokens.length && (
             <CTACard
               title="Claim Governance Token"
