@@ -45,8 +45,11 @@ const TokenBalances = () => {
         }
         const boxToken = await karmicInstance.boxTokenTiers(token)
         const metadataUrl = await karmicInstance.uri(boxToken.id)
-        const data = (await axios.get(metadataUrl)).data.image;
-        const image = data.slice(0,4) === 'ipfs' ? `https://ipfs.io/ipfs/${data.slice(7)}` : data;
+        const data = (await axios.get(metadataUrl)).data.image
+        const image =
+          data.slice(0, 4) === 'ipfs'
+            ? `https://ipfs.io/ipfs/${data.slice(7)}`
+            : data
         const fees = await karmicInstance.fee()
         const fee_precision = await karmicInstance.FEE_PRECISION()
         const totalFunding = boxToken.funds
@@ -112,7 +115,9 @@ const TokenBalances = () => {
     setInProgress(true)
     console.log('Approving all the tokens')
     const tokensCopy = tokens.filter(
-      (token) => token.token != '0x0000000000000000000000000000000000000000' && Number(token.balance) > 0
+      (token) =>
+        token.token != '0x0000000000000000000000000000000000000000' &&
+        Number(token.balance) > 0
     )
 
     tokensCopy.reduce((previousApprove, tokenCopy, index) => {
@@ -238,7 +243,7 @@ const TokenBalances = () => {
       signer
     )
     const tokenAddresses = tokens
-      .filter((token) => token.balance > 0 && token.isTargetReached)
+      .filter((token) => Number(token.balance) > 0 && token.isTargetReached)
       .map((token) => token.token)
 
     const tx = await karmicInstance.claimGovernanceTokens(tokenAddresses)

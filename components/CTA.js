@@ -83,7 +83,7 @@ const CTA = ({
         description={
           'Approve and claim your KARMIC tokens from the crowdfunds that met their funding target. This will require multiple Metamask confirmations.'
         }
-        actionName={'Aprove'}
+        actionName={'Approve'}
         actionProgressName={'Approving...'}
         action={approveAllTokens}
       />
