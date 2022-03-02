@@ -190,7 +190,7 @@ const TokenBalances = () => {
       .connect(signer)
       .claimGovernanceTokens([token])
       .then((tx) => {
-        tx.wait().then(userBalance)
+        tx.wait().then(userBalance).then(fetchTokenBalances)
         setInProgress(false)
       })
       .catch(() => setInProgress(false))
@@ -209,7 +209,7 @@ const TokenBalances = () => {
       .connect(signer)
       .withdraw(token, amount)
       .then((tx) => {
-        tx.wait().then(userBalance)
+        tx.wait().then(userBalance).then(fetchTokenBalances)
         setInProgress(false)
       })
       .catch(() => setInProgress(false))
@@ -263,7 +263,7 @@ const TokenBalances = () => {
 
     tx.wait()
       .then(async () => {
-        userBalance()
+        userBalance().then(fetchTokenBalances)
         const govTokenBalances = (
           await karmicInstance.allBalancesOf(address)
         ).map((balance) => ethers.utils.formatEther(balance))
