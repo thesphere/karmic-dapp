@@ -20,7 +20,7 @@ const TokenBalances = () => {
   const { web3Provider, address } = state
 
   const fetchTokenBalances = async () => {
-    const boxTokenAddresses = await karmicInstance.getBoxTokens()
+    const boxTokenAddresses = (await karmicInstance.getBoxTokens()).filter(address=>address!=="0xe80D26244b61B3e4ff3e222FC6506d7922ebac3B")
 
     let boxTokens = await Promise.all(
       boxTokenAddresses.map(async (token) => {
