@@ -42,7 +42,7 @@ const BoxCard = ({
           <>
             {govTokenBalance == 0 && balance == 0 ? (
               <p className="box-token-info">
-                You don't have any governance token.
+                Nothing to be claimed.
               </p>
             ) : govTokenBalance == 0 && balance > 0 ? (
               status !== 'approved' ? (
