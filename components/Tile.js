@@ -21,7 +21,7 @@ const Tile = ({ props }) => {
     <BoxCard
       reclaim={reclaim}
       donate={donate}
-      mirrorUrl={`https://g.mirror.xyz/crowdfunds/${token}`}
+      mirrorUrl={`https://mirror.xyz/digitalsoul.eth/crowdfunds/${token}`}
       govTokenBalance={govTokenBalance}
       balance={balance}
       status={status}
@@ -32,5 +32,4 @@ const Tile = ({ props }) => {
     />
   )
 }
-//https://g.mirror.xyz/crowdfunds/0x1B7D237406f51978d48BFCEc2211c5EB97a344AA
 export default Tile
