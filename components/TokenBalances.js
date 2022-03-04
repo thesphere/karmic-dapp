@@ -20,7 +20,9 @@ const TokenBalances = () => {
   const { web3Provider, address } = state
 
   const fetchTokenBalances = async () => {
-    const boxTokenAddresses = await karmicInstance.getBoxTokens()
+    const boxTokenAddresses = (await karmicInstance.getBoxTokens()).filter(
+      (address) => address !== '0x82939D7ce86c81a63BCeA2B287947AE6940ba8C3'
+    )
 
     let boxTokens = await Promise.all(
       boxTokenAddresses.map(async (token) => {
@@ -29,13 +31,15 @@ const TokenBalances = () => {
           isKarmicApproved = ethers.BigNumber.from(0)
         let name
         if (isBoxToken) {
-          console.log('no error')
           const tokenInstance = new ethers.Contract(
             token,
             erc20.abi,
             web3Provider
           )
-          name = await tokenInstance.name()
+          name =
+            token === '0xe80D26244b61B3e4ff3e222FC6506d7922ebac3B'
+              ? 'Seed #1: PLI'
+              : await tokenInstance.name()
           balance = await tokenInstance.balanceOf(state.address)
 
           isKarmicApproved = await tokenInstance.allowance(
@@ -133,7 +137,6 @@ const TokenBalances = () => {
     tokensCopy.reduce((previousApprove, tokenCopy, index) => {
       return previousApprove
         .then(() => {
-          console.log(index)
           console.log('Approving token ', tokenCopy.token)
           return handleApprove(tokenCopy)
         })
