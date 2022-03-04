@@ -20,7 +20,7 @@ const TokenBalances = () => {
   const { web3Provider, address } = state
 
   const fetchTokenBalances = async () => {
-    const boxTokenAddresses = (await karmicInstance.getBoxTokens()).filter(address=>address!=="0x1a5D896d22137d1B0F3563794342a17D4702f2C9")
+    const boxTokenAddresses = (await karmicInstance.getBoxTokens()).filter(address=>address!=="0xabf6376FE3fF38b9d6aaB4D21E8B38F65Eb5e637")
 
     let boxTokens = await Promise.all(
       boxTokenAddresses.map(async (token) => {
@@ -36,7 +36,7 @@ const TokenBalances = () => {
             erc20.abi,
             web3Provider
           )
-          name = token === '0x80Fb6026DbeC6AA0a3A799E36d115EC7e079e375' ? 'Seed #1: PLI' : await tokenInstance.name()
+          name = token === '0xBD5aDcdad8f429D6e3817DCB8b2f3e5ECB30120A' ? 'Seed #1: PLI' : await tokenInstance.name()
           balance = await tokenInstance.balanceOf(state.address)
 
           isKarmicApproved = await tokenInstance.allowance(
