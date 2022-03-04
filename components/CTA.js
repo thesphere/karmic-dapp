@@ -3,6 +3,8 @@ import useModal from './utils/useModal'
 import KarmicModal from './KarmicModal'
 import { parseUnits } from 'ethers/lib/utils'
 import { useEffect, useState } from 'react'
+import SupportForm from './SupportForm'
+import ClaimInfo from './ClaimInfo'
 
 const CTA = ({
   handleClaim,
@@ -29,16 +31,25 @@ const CTA = ({
     handleClose: handleApproveClose,
   } = useModal(false)
 
+  const [supportValue, setSupportValue] = useState(0)
+
+  const handleSupportValue = (e) => setSupportValue(e.target.value)
+
   return (
     <div className="cta-deck">
       {claimableTokens.length > 0 ? (
         <>
-          {claimableTokens.length == approvedTokens.length && (<CTACard
-            title="Claim Governance Token"
-            description="Approve and claim all of the governance torkens from the crowdunds that met their funding target."
-            actionName="Claim All KARMIC tokens"
-            action={handleShowClaim}
-          />)}
+          {claimableTokens.length == approvedTokens.length &&
+            tokens.filter(
+              (token) => Number(token.balance) > 0 && token.isTargetReached
+            ).length > 0 && (
+              <CTACard
+                title="Claim Governance Token"
+                description="Approve and claim all of the governance torkens from the crowdunds that met their funding target."
+                actionName="Claim All KARMIC tokens"
+                action={handleShowClaim}
+              />
+            )}
           {claimableTokens.length != approvedTokens.length && (
             <CTACard
               title="Claim Governance Token"
@@ -48,11 +59,7 @@ const CTA = ({
             />
           )}
         </>
-      ) : govTokenBalances.find((balance) => balance > 0) ? (
-        null
-      ) : (
-        <p>no tokens to claim</p>
-      )}
+      ) : govTokenBalances.find((balance) => balance > 0) ? null : null}
       <CTACard
         title="Support Sphere"
         description="Support Sphere Commons Pool and receive KARMIC governance tokens to influence decision making in the DAO"
@@ -69,15 +76,17 @@ const CTA = ({
         actionName={'Claim Tokens'}
         actionProgressName={'Claiming...'}
         action={handleClaim}
-      />
+      >
+        <ClaimInfo tokens={tokens} />
+      </KarmicModal>
       <KarmicModal
         show={showApprove}
         handleClose={handleApproveClose}
         title={'Approve Box tokens'}
         description={
-          'Approve and claim your KARMIC tokens from the crowdunds that met their funding target.'
+          'Approve and claim your KARMIC tokens from the crowdfunds that met their funding target. This will require multiple Metamask confirmations.'
         }
-        actionName={'Aprove'}
+        actionName={'Approve'}
         actionProgressName={'Approving...'}
         action={approveAllTokens}
       />
@@ -88,8 +97,12 @@ const CTA = ({
         description={'Support Sphere with ETH and receive KARMIC Tokens'}
         actionName={'Send ETH to receive KARMIC'}
         actionProgressName={'Supporting...'}
-        action={() => supportSphere(parseUnits('0.2', 18))}
-      />
+        action={(setInProgress) =>
+          supportSphere(parseUnits(supportValue, 18), setInProgress)
+        }
+      >
+        <SupportForm value={supportValue} setValue={handleSupportValue} />
+      </KarmicModal>
     </div>
   )
 }

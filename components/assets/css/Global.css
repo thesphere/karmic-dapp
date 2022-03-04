@@ -1,7 +1,17 @@
-body{
-    background: url('../../../public/Stars.png');
+body {
+  background: url('../../../public/Stars.png');
 }
 
-.text-center{
-    text-align: center;
+.text-center {
+  text-align: center;
+}
+
+.card-not-loaded-desc{
+  font-family: 'Space Mono', monospace;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 26px;
+  color: #A0A0FF;
+  margin-top: 10px;
 }

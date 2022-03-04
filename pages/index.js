@@ -59,7 +59,7 @@ export const Home = () => {
 
   return (
     <>
-      <div className='container'>
+      <div className="container">
         <Head>
           <title>The Sphere</title>
           <link rel="icon" href="/favicon.ico" />

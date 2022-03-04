@@ -4,6 +4,9 @@ import '../components/assets/css/CTACard.css'
 import '../components/assets/css/DappNav.css'
 import '../components/assets/css/KarmicModal.css'
 import '../components/assets/css/Global.css'
+import '../components/assets/css/BoxCard.css'
+import '../components/assets/css/SupportForm.css'
+import '../components/assets/css/DonateForm.css'
 
 function MyApp({ Component, pageProps }) {
   return (

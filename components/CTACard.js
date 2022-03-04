@@ -1,4 +1,4 @@
-import { Button } from 'react-bootstrap'
+import Button from './Button'
 
 const CTACard = ({
   title = 'CTA Title',
@@ -15,14 +15,7 @@ const CTACard = ({
         <p className="cta-description">{description}</p>
       </div>
       <div className="col-12">
-        <Button
-          className="cta-action sphere-action-Btn"
-          variant="primary"
-          type="button"
-          onClick={action}
-        >
-          {actionName}
-        </Button>
+        <Button classNames="cta-action" text={actionName} action={action} />
       </div>
     </div>
   )

@@ -15,12 +15,9 @@ const KarmicModal = ({
 
   const performAction = async () => {
     try {
-      setInProgress(true)
-      await action()
-      setInProgress(false)
+      action(setInProgress)
     } catch (error) {
       console.error(error)
-      setInProgress(false)
     }
   }
   return (
@@ -34,10 +31,10 @@ const KarmicModal = ({
       <Modal.Body className="karmic-modal-container">
         <h3 className="karmic-modal-title">{title}</h3>
         <p className="karmic-modal-description">{description}</p>
-        {children}
         <div className="karmic-modal-body">
+          {children}
           <Button
-            className="karmic-modal-action"
+            className="karmic-modal-action action-hover"
             variant="primary"
             onClick={performAction}
           >
