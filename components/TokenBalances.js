@@ -20,11 +20,12 @@ const TokenBalances = () => {
   const { web3Provider, address } = state
 
   const fetchTokenBalances = async () => {
-    const boxTokenAddresses = await karmicInstance.getBoxTokens()
+    const boxTokenAddresses = (await karmicInstance.getBoxTokens()).filter(address=>address!=="0xabf6376FE3fF38b9d6aaB4D21E8B38F65Eb5e637")
 
     let boxTokens = await Promise.all(
       boxTokenAddresses.map(async (token) => {
         const isBoxToken = token != '0x0000000000000000000000000000000000000000'
+        console.log(isBoxToken, token);
         let balance = ethers.BigNumber.from(0),
           isKarmicApproved = ethers.BigNumber.from(0)
         let name
@@ -35,7 +36,7 @@ const TokenBalances = () => {
             erc20.abi,
             web3Provider
           )
-          name = await tokenInstance.name()
+          name = token === '0xBD5aDcdad8f429D6e3817DCB8b2f3e5ECB30120A' ? 'Seed #1: PLI' : await tokenInstance.name()
           balance = await tokenInstance.balanceOf(state.address)
 
           isKarmicApproved = await tokenInstance.allowance(
@@ -46,6 +47,7 @@ const TokenBalances = () => {
         const boxToken = await karmicInstance.boxTokenTiers(token)
         const metadataUrl = await karmicInstance.uri(boxToken.id)
         let image
+        console.log(metadataUrl, boxToken.id, isBoxToken, token);
         if (isBoxToken) {
           const targetUrl =
             metadataUrl.slice(0, 4) === 'ipfs'

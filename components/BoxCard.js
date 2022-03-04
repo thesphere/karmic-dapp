@@ -35,7 +35,7 @@ const BoxCard = ({
           src={image}
         />
         <Card.Body>
-          <Card.Title className="box-token-title">{title}</Card.Title>
+          <Card.Title className="box-token-title">{title.length<=21?title:`${title.slice(0,19)}...`}</Card.Title>
           <Card.Text className="box-token-status">
             Status: {isTargetReached ? 'Target reached' : 'Target not reached'}
           </Card.Text>
