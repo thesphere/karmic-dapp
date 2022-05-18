@@ -70,7 +70,7 @@ const TokenBalances = () => {
           .mul(fee_precision)
           .div(fee_precision.sub(fees))
         const isTargetReached = totalFunding.gte(boxToken.threshold)
-        const status = isKarmicApproved > 0 ? 'approved' : null
+        const status = isKarmicApproved.gte(balance) ? 'approved' : null
         try {
           return {
             token,
