@@ -1,0 +1,1 @@
+export const IPFS_URL = "https://nftstorage.link/ipfs/";
