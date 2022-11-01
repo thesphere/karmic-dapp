@@ -7,6 +7,7 @@ import TokenTiles from './TokenTiles'
 import { parseUnits } from 'ethers/lib/utils'
 import Header from './Header'
 import axios from 'axios'
+import { IPFS_URL } from './Constants'
 
 const TokenBalances = () => {
   const [fetchingTokens, setFetchingTokens] = useState(true)
@@ -23,9 +24,10 @@ const TokenBalances = () => {
     const boxTokenAddresses = (await karmicInstance.getBoxTokens()).filter(
       (address) => address !== '0x82939D7ce86c81a63BCeA2B287947AE6940ba8C3'
     )
-
+    const startTimeOutside = performance.now();
     let boxTokens = await Promise.all(
       boxTokenAddresses.map(async (token) => {
+        const startTime = performance.now()
         const isBoxToken = token != '0x0000000000000000000000000000000000000000'
         let balance = ethers.BigNumber.from(0),
           isKarmicApproved = ethers.BigNumber.from(0)
@@ -53,13 +55,15 @@ const TokenBalances = () => {
         if (isBoxToken) {
           const targetUrl =
             metadataUrl.slice(0, 4) === 'ipfs'
-              ? `https://ipfs.io/ipfs/${metadataUrl.slice(7)}`
+              ? `${IPFS_URL}${metadataUrl.slice(7)}`
               : metadataUrl
           const data = (await axios.get(targetUrl)).data.image
+          if (data) {
+            const endTime = performance.now()
+            console.log('loaded metadata for', name, 'in', endTime - startTime)
+          }
           image =
-            data.slice(0, 4) === 'ipfs'
-              ? `https://ipfs.io/ipfs/${data.slice(7)}`
-              : data
+            data.slice(0, 4) === 'ipfs' ? `${IPFS_URL}${data.slice(7)}` : data
         } else {
           image =
             'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Sphere_-_monochrome_simple.svg/1200px-Sphere_-_monochrome_simple.svg.png'
@@ -92,6 +96,10 @@ const TokenBalances = () => {
         }
       })
     )
+    if(boxTokens){
+      const endTimeOutside = performance.now();
+      console.log("Loaded all the box tokens in", endTimeOutside-startTimeOutside);
+    }
 
     boxTokens = boxTokens.filter(
       (box) => box.token !== ethers.constants.AddressZero
