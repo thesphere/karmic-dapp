@@ -18,7 +18,7 @@ const TokenTiles = (props) => {
       <div className="main-container">
         {address ? (
           fetchingTokens ? (
-            <p className="card-not-loaded-desc">fetching box tokens..</p>
+            <p className="card-not-loaded-desc">fetching box tokens.. It might take few minutes.</p>
           ) : (
             <div className="tile-container">
               {tokens.map((tokenBalance, idx) => {
